@@ -1,4 +1,6 @@
-django
+
+Django
+django-environ
 gunicorn
 whitenoise
 psycopg2-binary
