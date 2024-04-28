@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>Create Episode</title>
+  </head>
+  <body>
+    <div class="container my-4">
+      <!-- Create Episode Form -->
+      <div class="mb-5">
+        <h2 class="mb-3">CREATE EPISODE</h2>
+        <form>
+          <div class="mb-3">
+            <label for="selectPodcast" class="form-label">Podcast:</label>
+            <select class="form-select" id="selectPodcast">
+              <option selected>Podcast1</option>
+              <!-- Add more podcasts if needed -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="episodeTitle" class="form-label">Judul:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="episodeTitle"
+              placeholder="isi..."
+            />
+          </div>
+          <div class="mb-3">
+            <label for="episodeDescription" class="form-label"
+              >Deskripsi:</label
+            >
+            <textarea
+              class="form-control"
+              id="episodeDescription"
+              rows="3"
+              placeholder="isi..."
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="episodeDuration" class="form-label">Durasi:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="episodeDuration"
+              placeholder="isi..."
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">SUBMIT</button>
+        </form>
+      </div>
+
+      <!-- List Episodes -->
+      <div>
+        <h2 class="mb-3">DAFTAR EPISODE PADA PODCAST1</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Judul Episode</th>
+              <th>Deskripsi</th>
+              <th>Durasi</th>
+              <th>Tanggal</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SubJudul1</td>
+              <td>Lorem Ipsum ....</td>
+              <td>59 menit</td>
+              <td>18/03/2024</td>
+              <td><a href="#" class="btn btn-link">Hapus</a></td>
+            </tr>
+            <tr>
+              <td>SubJudul2</td>
+              <td>Lorem Ipsum ....</td>
+              <td>1 jam 2 menit</td>
+              <td>25/03/2024</td>
+              <td><a href="#" class="btn btn-link">Hapus</a></td>
+            </tr>
+            <!-- Additional rows for other episodes -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,2 +1,8 @@
+
 Django
 django-environ
+gunicorn
+whitenoise
+psycopg2-binary
+requests
+urllib3
