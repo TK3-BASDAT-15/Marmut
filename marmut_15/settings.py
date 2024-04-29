@@ -91,6 +91,9 @@ DATABASES = {
         'PASSWORD': env('PG_PASSWORD'),
         'HOST': env('PG_HOST'),
         'PORT': env('PG_PORT'),
+        'OPTIONS': {
+            'options': '-c search_path=marmut'
+        },
     }
 }
 
