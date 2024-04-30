@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'podcast',
-    'main'
+    'main',
+    'album',
+    'song',
 ]
 
 MIDDLEWARE = [
