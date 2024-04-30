@@ -14,6 +14,7 @@ class AlbumView(View):
         with connection.cursor() as cursor:
             query = 'SELECT judul, nama, jumlah_lagu, total_durasi FROM album, label WHERE album.id_label = label.id'
             cursor.execute(query)
+            
             entries = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
 
