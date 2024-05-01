@@ -13,55 +13,65 @@
         <h2 class="text-center">Song Detail</h2>
         <div class="card">
           <div class="card-body">
+            <table class="table">
+              <tbody>
+                  <tr>
+                      <td class="fw">Judul</td>
+                      <td class="text-start">: Song1</td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Genre(s)</td>
+                      <td class="text-start">: 
+                        <p> - Genre 1</p>
+                        <p> - Genre 2</p>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Artist</td>
+                      <td class="text-start">: Artist1
+                      </td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Songwriter(s)</td>
+                      <td class="text-start">: 
+                        <p> - Songwriter1</p>
+                        <p> - SongWriter2</p>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Durasi</td>
+                      <td class="text-start">: 3 menit</td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Tanggal Rilis</td>
+                      <td class="text-start">: 18/03/24</td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Tahun</td>
+                      <td class="text-start">: 2024</td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Total Play</td>
+                      <td class="text-start">: 0</td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Total Downloads</td>
+                      <td class="text-start">: 0</td>
+                  </tr>
+                  <tr>
+                      <td class="fw">Album</td>
+                      <td class="text-start">: Album1</td>
+                  </tr>
+              </tbody>
+          </table>
             <div class="mb-3">
-              <label for="judul" class="form-label">Judul:</label>
-              <p class="form-control-static">Judul Lagu</p>
-            </div>
-            <div class="mb-3">
-              <label for="genre" class="form-label">Genre:</label>
-              <p class="form-control-static">Genre Lagu</p>
-            </div>
-            <div class="mb-3">
-              <label for="artist" class="form-label">Artist:</label>
-              <p class="form-control-static">Nama Artist</p>
-            </div>
-            <div class="mb-3">
-              <label for="songwriter" class="form-label">Songwriter:</label>
-              <p class="form-control-static">Nama Songwriter</p>
-            </div>
-            <div class="mb-3">
-              <label for="durasi" class="form-label">Durasi:</label>
-              <p class="form-control-static">Durasi Lagu</p>
-            </div>
-            <div class="mb-3">
-              <label for="tanggal_rilis" class="form-label">Tanggal Rilis:</label>
-              <p class="form-control-static">Tanggal Rilis Lagu</p>
-            </div>
-            <div class="mb-3">
-              <label for="tahun" class="form-label">Tahun:</label>
-              <p class="form-control-static">Tahun Lagu</p>
-            </div>
-            <div class="mb-3">
-              <label for="total_play" class="form-label">Total Play:</label>
-              <p class="form-control-static">Jumlah Total Play</p>
-            </div>
-            <div class="mb-3">
-              <label for="total_downloads" class="form-label">Total Downloads:</label>
-              <p class="form-control-static">Jumlah Total Downloads</p>
-            </div>
-            <div class="mb-3">
-              <label for="album" class="form-label">Album:</label>
-              <p class="form-control-static">Nama Album</p>
-            </div>
-            <div class="mb-3">
-              <label for="progress" class="form-label">Progress:</label>
-              <input type="range" class="form-range" id="progress">
+              <input type="range" class="form-range p-4" id="progress">
             </div>
             <div class="text-center">
               <button class="btn btn-success">Play</button>
-              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#hapusModal">Add to Playlist</button>
-              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#hapusModal">Download</button>
-              <button class="btn btn-secondary">Kembali</button>
+              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#AddModal">Add to Playlist</button>
+              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#DownloadModal">Download</button>
+              <a href="{% url 'playlist:user_playlist_detail' %}"  class="btn btn-secondary">Kembali</a>
             </div>
           </div>
         </div>
@@ -70,25 +80,25 @@
   </div>
 
   <!-- Modal add song -->
-  <div class="modal fade" id="hapusModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
+  <div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            Berhasil mengunduh Lagu dengan judul 'Song1'!
+            Berhasil menambahkan Lagu dengan judul 'Song1' ke 'Playlist1'!
         </div>
         <div class="modal-footer d-flex justify-content-center">
-            <a href="link_ke_playlist" class="btn btn-primary">playlist</a>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">kembali</button>
+            <a href="{% url 'playlist:user_playlist_detail' %}" class="btn btn-primary">playlist</a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">kembali</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Modal Download -->
-  <div class="modal fade" id="hapusModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
+  <div class="modal fade" id="DownloadModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -98,8 +108,8 @@
             Berhasil mengunduh Lagu dengan judul 'Song1'!
         </div>
         <div class="modal-footer d-flex justify-content-center">
-            <a href="link_ke_daftar_download" class="btn btn-primary">Daftar download</a>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">kembali</button>
+            <button type="button" class="btn btn-primary">Download</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">kembali</button>
         </div>
       </div>
     </div>

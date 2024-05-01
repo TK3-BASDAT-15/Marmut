@@ -19,14 +19,14 @@
               <div class="mb-3">
                 <label for="dropdownLagu" class="form-label">Pilih Lagu</label>
                 <select class="form-select" id="dropdownLagu" name="dropdownLagu">
+                  <!--opsi lagu  -->
                   <option selected disabled>Pilih lagu...</option>
                   <option value="lagu1">Lagu 1</option>
                   <option value="lagu2">Lagu 2</option>
-                  <!-- Tambahkan opsi lagu lainnya di sini -->
                 </select>
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{% url 'playlist:user_playlist_detail' %}"  class="btn btn-primary w-50">Submit</a>
               </div>
             </form>
           </div>
