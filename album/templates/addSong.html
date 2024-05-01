@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* * {
+        border: 1px solid red;
+    } */
+</style>
+
+<div class="container-fluid d-flex">
+    <div class="flex-grow-1"></div>
+    <div style="flex-grow: 2;">
+        <form method="POST" class="border border-dark p-2 mt-3 mb-3 d-flex flex-column gap-5">
+            {% csrf_token %}
+            <h2 class="text-center m-0">CREATE LAGU</h2>
+            <div class="d-flex flex-column gap-4">
+                <div class="d-flex gap-2">
+                    <h6 class="fw-normal m-0">Album:</h6>
+                    <h6 class="fw-normal m-0">{{ album_name }}</h6>
+                </div>
+                <div class="d-flex gap-2">
+                    <label for="judul">Judul:</label>
+                    <input type="text" id="judul" name="judul" class="form-control" required>
+                </div>
+                <div class="d-flex gap-2">
+                    <label for="artist">Artist:</label>
+                    <select id="artist" name="artist" class="form-select">
+                        <option>Select an artist</option>
+                        {% for artist in artists %}
+                        <option value="{{ artist.id }}">{{ artist.nama }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <label for="songwriter">Songwriter:</label>
+                    <select multiple id="songwriter" name="songwriter" class="form-select">
+                        {% for songwriter in songwriters %}
+                        <option value="{{ songwriter.id }}">{{ songwriter.nama }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <label for="genre">Genre:</label>
+                    <select multiple id="genre" name="genre" class="form-select">
+                        {% for genre in genres %}
+                        <option value="{{ genre.id_konten }}_{{ genre.genre }}">{{ genre.genre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <label for="durasi">Durasi:</label>
+                    <input type="number" id="durasi" name="durasi" class="form-control" required>
+                </div>
+            </div>
+            <div class="d-flex pb-2">
+                <div class="flex-grow-1"></div>
+                <button type="submit" class="btn btn-primary align-self-center">SUBMIT</button>
+                <div class="flex-grow-1"></div>
+            </div>
+        </form>
+    </div>
+    <div class="flex-grow-1"></div>
+</div>
+{% endblock content %}

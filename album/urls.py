@@ -1,7 +1,9 @@
-from django.urls import path, re_path
+from django.urls import path
 
 from .views import *
 
 urlpatterns = [
-    re_path(r'^(?P<id_album>.+)?/?$', AlbumView.as_view())
+    path('', AlbumView.as_view()),
+    path('<uuid:id_album>/songs/', AlbumView.as_view()),
+    path('<uuid:id_album>/add-song/', AlbumView.as_view()),
 ]
