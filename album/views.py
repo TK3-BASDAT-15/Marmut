@@ -93,6 +93,12 @@ class AlbumView(View):
 
         return render(request, 'addAlbum.html', context=context)
     
+    def __get_album_list_label_page(self, request: HttpRequest):
+        return render(request, 'albumListLabel.html')
+    
+    def __get_album_songs_label_page(self, request: HttpRequest, id_album):
+        return render(request, 'albumSongs.html')
+    
     def get(self, request: HttpRequest, id_album = None):
         req_full_path = request.get_full_path()
 
@@ -101,10 +107,14 @@ class AlbumView(View):
                 return self.__get_album_list_page(request)
             elif req_full_path.endswith('/add-album/'):
                 return self.__get_add_album_page(request)
+            elif req_full_path.endswith('/label/'):
+                return self.__get_album_list_label_page(request)
         elif req_full_path.endswith('/add-song/'):
             return self.__get_add_song_page(request, id_album)
         elif req_full_path.endswith('/songs/'):
             return self.__get_album_songs_page(request, id_album)
+        elif req_full_path.endswith('/label/'):
+            return self.__get_album_songs_label_page(request, id_album)
 
     def post(self, request: HttpRequest):
         req_body_dict = json.loads(request.body)
