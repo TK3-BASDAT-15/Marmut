@@ -17,6 +17,10 @@ from django.urls import reverse
 def show_main(request):
     return render(request, "main.html")
 
+@login_required(login_url='/login')
+def show_dashboard(request):
+    return render(request, "dashboard.html")
+
 def register(request):
     '''
     form = UserCreationForm()
