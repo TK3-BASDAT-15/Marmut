@@ -1,44 +1,54 @@
-
-{% block meta %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-{% endblock meta %}
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 
-{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h5 class="text-center mb-4">Login</h5>
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username" placeholder="Enter username" class="form-control">
+                        </div>
+                                
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" placeholder="Enter password" class="form-control">
+                        </div>
 
-<div class = "login">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </form>
 
-    <h1>Login</h1>
+                    {% if messages %}
+                        <ul class="list-unstyled">
+                            {% for message in messages %}
+                                <li class="text-danger">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}     
 
-    <form method="POST" action="">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>Username: </td>
-                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
-            </tr>
-                    
-            <tr>
-                <td>Password: </td>
-                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
-            </tr>
-
-            <tr>
-                <td></td>
-                <td><input class="btn login_btn" type="submit" value="Login"></td>
-            </tr>
-        </table>
-    </form>
-
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}     
-        
-    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
-
+                    <p class="text-center">Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-{% endblock content %}
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
