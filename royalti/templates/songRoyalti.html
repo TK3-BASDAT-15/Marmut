@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <table class="table table-bordered border-dark mt-3 mx-2">
+        <thead>
+            <tr>
+                <th colspan="5">
+                    <h2 class="text-center m-0 p-2">LIST ROYALTI</h2>
+                </th>
+            </tr>
+            <tr>
+                <th>Judul Lagu</th>
+                <th>Judul Album</th>
+                <th>Total Play</th>
+                <th>Total Download</th>
+                <th>Total Royalti Didapat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Lagu1</td>
+                <td>Album1</td>
+                <td>3</td>
+                <td>0</td>
+                <td>Rp 450000</td>
+            </tr>
+            <tr>
+                <td>Lagu2</td>
+                <td>Album2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>Rp 520000</td>
+            </tr>
+            <tr>
+                <td>...</td>
+                <td></td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

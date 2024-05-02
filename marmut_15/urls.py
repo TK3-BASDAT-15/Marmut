@@ -25,6 +25,7 @@ from django.contrib import messages
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    path('', include('royalti.urls')),
     path("podcast/", include("podcast.urls")),
     path('playlist/', include('playlist.urls')),
     path('album/', include('album.urls')),
