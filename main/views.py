@@ -15,10 +15,10 @@ from django.urls import reverse
 # Create your views here.
 @login_required(login_url='/login')
 def show_main(request):
-
     return render(request, "main.html")
 
 def register(request):
+    '''
     form = UserCreationForm()
 
     if request.method == "POST":
@@ -28,7 +28,8 @@ def register(request):
             messages.success(request, 'Your account has been successfully created!')
             return redirect('main:login')
     context = {'form':form}
-    return render(request, 'register.html', context)
+    '''
+    return render(request, 'register.html')
 
 def login_user(request):
     if request.method == 'POST':
@@ -49,3 +50,9 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def register_user(request):
+    return render(request, 'registerUser.html')
+
+def choose_register(request):
+    return render(request, 'chooseRegisterRole.html')

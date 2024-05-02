@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card text-center w-50 mx-auto p-4 mt-md-5">
+      <div class="text-center font-weight-bold">Register</div> <!-- Tambahkan kelas font-weight-bold -->
+      <div class="card-body">
+          <a href="{% url 'main:register_user' %}" class="btn btn-primary mb-2">User</a>
+          <a href="{% url 'main:register' %}" class="btn btn-primary mb-2">Label</a>
+      </div>
+    </div>
+</div>
+{% endblock %}
