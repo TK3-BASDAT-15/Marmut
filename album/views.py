@@ -91,13 +91,13 @@ class AlbumView(View):
         return render(request, 'albumSongs.html', context=context)
     
     def get(self, request: HttpRequest, id_album = None):
-        full_path = request.get_full_path()
+        req_full_path = request.get_full_path()
 
         if id_album is None:
             return self.__get_album_create_and_list_page(request)
-        elif full_path.endswith('add-song/'):
+        elif req_full_path.endswith('add-song/'):
             return self.__get_add_song_page(request, id_album)
-        else:
+        elif req_full_path.endswith('songs/'):
             return self.__get_album_songs_page(request, id_album)
 
     def post(self, request: HttpRequest):
@@ -108,14 +108,16 @@ class AlbumView(View):
         id_label = req_body_dict['id_label']
         
         with connection.cursor() as cursor:
-            query = f'INSERT INTO album (id, judul, id_label) VALUES (\'{id_album}\', \'{judul}\', \'{id_label}\')'
-            cursor.execute(query)
+            query = 'INSERT INTO album (id, judul, id_label) VALUES (%s, %s, %s)'
+            cursor.execute(query, [id_album, judul, id_label])
 
         return HttpResponse(status=201)
     
     def delete(self, request: HttpRequest, id_album):
+        req_full_path = request.get_full_path()
+
         with connection.cursor() as cursor:
-            query = f'DELETE FROM album WHERE id = \'{id_album}\''
-            cursor.execute(query)
+            query = 'DELETE FROM album WHERE id = %s'
+            cursor.execute(query, [id_album])
 
         return HttpResponse(status=204)
