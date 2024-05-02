@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <table class="table table-bordered border-dark mt-3 mx-2">
+        <thead>
+            <tr>
+                <th colspan="5">
+                    <h2 class="text-center m-0 p-2">DAFTAR LAGU PADA {{ album.judul }}</h2>
+                </th>
+            </tr>
+            <tr>
+                <th>Judul</th>
+                <th>Durasi</th>
+                <th>Total Play</th>
+                <th>Total Download</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <td>{{ song.judul_konten }}</td>
+                <td>{{ song.durasi_konten }}</td>
+                <td>{{ song.total_play_song }}</td>
+                <td>{{ song.total_download_song }}</td>
+                <td>
+                    <div class="d-flex flex-column">
+                        <a href="/song/{{ song.id_konten }}">
+                            <button class="btn btn-primary">Lihat Detail</button>
+                        </a>
+                        <a href="{{ album.id }}/delete-song/{{ song.id }}">
+                            <button class="btn btn-danger">Hapus</button>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
