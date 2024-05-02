@@ -10,7 +10,7 @@ import uuid
 # Create your views here.
 # @method_decorator(csrf_exempt, name='dispatch')
 class AlbumView(View):
-    def __get_album_create_and_list_page(self, request: HttpRequest):
+    def __get_album_list_page(self, request: HttpRequest):
         with connection.cursor() as cursor:
             query = 'SELECT album.id, judul, nama, jumlah_lagu, total_durasi FROM album, label WHERE album.id_label = label.id'
             cursor.execute(query)
@@ -19,19 +19,9 @@ class AlbumView(View):
             columns = [col[0] for col in cursor.description]
             albums = [dict(zip(columns, row)) for row in entries]
 
-            query = 'SELECT id, nama FROM label'
-            cursor.execute(query)
+        context = {'albums': albums}
 
-            entries = cursor.fetchall()
-            columns = [col[0] for col in cursor.description]
-            labels = [dict(zip(columns, row)) for row in entries]
-
-        context = {
-            'albums': albums,
-            'labels': labels
-        }
-
-        return render(request, 'albumCreateAndList.html', context=context)
+        return render(request, 'albumList.html', context=context)
     
     def __get_add_song_page(self, request: HttpRequest, id_album):
         with connection.cursor() as cursor:
@@ -90,14 +80,30 @@ class AlbumView(View):
 
         return render(request, 'albumSongs.html', context=context)
     
+    def __get_add_album_page(self, request: HttpRequest):
+        with connection.cursor() as cursor:
+            query = 'SELECT id, nama FROM label'
+            cursor.execute(query)
+
+            entries = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            labels = [dict(zip(columns, row)) for row in entries]
+
+        context = {'labels': labels}
+
+        return render(request, 'addAlbum.html', context=context)
+    
     def get(self, request: HttpRequest, id_album = None):
         req_full_path = request.get_full_path()
 
         if id_album is None:
-            return self.__get_album_create_and_list_page(request)
-        elif req_full_path.endswith('add-song/'):
+            if req_full_path.endswith('/album/'):
+                return self.__get_album_list_page(request)
+            elif req_full_path.endswith('/add-album/'):
+                return self.__get_add_album_page(request)
+        elif req_full_path.endswith('/add-song/'):
             return self.__get_add_song_page(request, id_album)
-        elif req_full_path.endswith('songs/'):
+        elif req_full_path.endswith('/songs/'):
             return self.__get_album_songs_page(request, id_album)
 
     def post(self, request: HttpRequest):
