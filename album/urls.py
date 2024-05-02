@@ -6,4 +6,5 @@ urlpatterns = [
     path('', AlbumView.as_view()),
     path('<uuid:id_album>/songs/', AlbumView.as_view()),
     path('<uuid:id_album>/add-song/', AlbumView.as_view()),
+    path('<uuid:id_album>/delete/', AlbumView.as_view()),
 ]
