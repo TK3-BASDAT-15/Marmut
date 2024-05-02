@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <title>Manage Podcast</title>
-  </head>
-  <body>
-    <div class="container my-4">
-      <!-- Create Podcast Form -->
-      <div class="mb-5">
-        <h2 class="mb-3">CREATE PODCAST</h2>
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container my-4">
+    <!-- Create Podcast Form wrapped in a Bootstrap card -->
+    <div class="card mb-5">
+      <div class="card-header">
+        <h2>CREATE PODCAST</h2>
+      </div>
+      <div class="card-body">
         <form>
           <div class="mb-3">
             <label for="podcastTitle" class="form-label">Judul:</label>
@@ -26,10 +19,22 @@
           </div>
           <div class="mb-3">
             <label for="podcastGenre" class="form-label">Genre:</label>
-            <select multiple class="form-select" id="podcastGenre">
-              <option>Genre1</option>
-              <option>Genre2</option>
-            </select>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGenre" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Choose genre
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuGenre">
+                <a class="dropdown-item" href="#">
+                  Genre1
+                </a>
+                <a class="dropdown-item" href="#">
+                  Genre2
+                </a>
+                <a class="dropdown-item" href="#">
+                  Genre3
+                </a>
+              </div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="podcastDuration" class="form-label">Durasi:</label>
@@ -43,80 +48,32 @@
           <button type="submit" class="btn btn-primary">SUBMIT</button>
         </form>
       </div>
-
-      <div class="mb-5">
-        <h2 class="mb-3">LIST PODCAST</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Judul</th>
-              <th>Jumlah Episode</th>
-              <th>Total Durasi</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Podcast1</td>
-              <td>0</td>
-              <td>0 menit</td>
-              <td>
-                <a href="../create_episode" class="btn btn-link">[Lihat Daftar Episode]</a>
-                <a href="../create_episode" class="btn btn-link">[Tambah Episode]</a>
-                <a href="#" class="btn btn-link">[Hapus]</a>
-              </td>
-            </tr>
-            <!-- Additional rows for other podcasts -->
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Create Episode Form -->
-      <div>
-        <h2 class="mb-3">CREATE EPISODE</h2>
-        <form>
-          <div class="mb-3">
-            <label for="episodePodcast" class="form-label">Podcast:</label>
-            <select class="form-select" id="episodePodcast">
-              <option>Podcast1</option>
-              <option>Podcast2</option>
-              <!-- Add more podcasts here -->
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="episodeTitle" class="form-label">Judul:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="episodeTitle"
-              placeholder="isi..."
-            />
-          </div>
-          <div class="mb-3">
-            <label for="episodeDescription" class="form-label"
-              >Deskripsi:</label
-            >
-            <textarea
-              class="form-control"
-              id="episodeDescription"
-              rows="3"
-              placeholder="isi..."
-            ></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="episodeDuration" class="form-label">Durasi:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="episodeDuration"
-              placeholder="isi..."
-            />
-          </div>
-          <button type="submit" class="btn btn-primary">SUBMIT</button>
-        </form>
-      </div>
     </div>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+    <div class="mb-5">
+      <h2 class="mb-3">LIST PODCAST</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Judul</th>
+            <th>Jumlah Episode</th>
+            <th>Total Durasi</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Podcast1</td>
+            <td>0</td>
+            <td>0 menit</td>
+            <td>
+              <a href="../create_episode" class="btn btn-link">[Lihat Daftar Episode]</a>
+              <a href="../create_episode" class="btn btn-link">[Tambah Episode]</a>
+              <a href="#" class="btn btn-link">[Hapus]</a>
+            </td>
+          </tr>
+          <!-- Additional rows for other podcasts -->
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

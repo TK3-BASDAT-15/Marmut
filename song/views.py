@@ -13,7 +13,7 @@ import uuid
 class SongView(View):
     def get(self, request: HttpRequest, id_song):
         with connection.cursor() as cursor:
-            query = 'SELECT judul, durasi, total_play, total_download FROM konten, song WHERE konten.id = song.id_konten AND song.id_konten = \'%s\''
+            query = 'SELECT judul, durasi, total_play, total_download FROM konten, song WHERE konten.id = song.id_konten AND song.id_konten = %s'
             cursor.execute(query, [id_song])
 
             entries = cursor.fetchall()
@@ -40,13 +40,13 @@ class SongView(View):
         tahun = now.strftime('%Y')
 
         with connection.cursor() as cursor:
-            query = 'INSERT INTO konten (id, judul, tanggal_rilis, tahun, durasi) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')'
+            query = 'INSERT INTO konten (id, judul, tanggal_rilis, tahun, durasi) VALUES (%s, %s, %s, %s, %s)'
             cursor.execute(query, [id_konten, judul, tanggal_rilis, tahun, durasi])
 
-            query = 'INSERT INTO song (id_konten, id_artist, id_album) VALUES (\'%s\', \'%s\', \'%s\')'
+            query = 'INSERT INTO song (id_konten, id_artist, id_album) VALUES (%s, %s, %s)'
             cursor.execute(query, [id_konten, id_artist, id_album])
 
-            query = 'INSERT INTO songwriter (id_songwriter, id_song) VALUES (\'%s\', \'%s\')'
+            query = 'INSERT INTO songwriter (id_songwriter, id_song) VALUES (%s, %s)'
             cursor.execute(query, [id_songwriter, id_konten])
 
             genre_entries = ''
@@ -56,17 +56,17 @@ class SongView(View):
             query = 'INSERT INTO genre (id_song, genre) VALUES (%s)'
             cursor.execute(query, [id_konten, genre_entries])
 
-            query = 'UPDATE album SET jumlah_lagu = jumlah_lagu + 1 WHERE id = \'%s\''
+            query = 'UPDATE album SET jumlah_lagu = jumlah_lagu + 1 WHERE id = %s'
             cursor.execute(query, [id_album])
 
-            query = 'UPDATE album SET total_durasi = total_durasi + %s WHERE id = \'%s\''
+            query = 'UPDATE album SET total_durasi = total_durasi + %s WHERE id = %s'
             cursor.execute(query, [durasi, id_album])
 
         return HttpResponse(status=201)
     
     def delete(self, request: HttpRequest, id_song):
         with connection.cursor() as cursor:
-            query = 'DELETE FROM lagu WHERE id = \'%s\''
+            query = 'DELETE FROM lagu WHERE id = %s'
             cursor.execute(query, [id_song])
 
         return HttpResponse(status=204)
