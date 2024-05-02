@@ -11,37 +11,41 @@
   </head>
   <body>
     <div class="container my-4">
-      <!-- Create Podcast Form -->
-      <div class="mb-5">
-        <h2 class="mb-3">CREATE PODCAST</h2>
-        <form>
-          <div class="mb-3">
-            <label for="podcastTitle" class="form-label">Judul:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="podcastTitle"
-              placeholder="isi..."
-            />
-          </div>
-          <div class="mb-3">
-            <label for="podcastGenre" class="form-label">Genre:</label>
-            <select multiple class="form-select" id="podcastGenre">
-              <option>Genre1</option>
-              <option>Genre2</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="podcastDuration" class="form-label">Durasi:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="podcastDuration"
-              placeholder="isi..."
-            />
-          </div>
-          <button type="submit" class="btn btn-primary">SUBMIT</button>
-        </form>
+      <!-- Create Podcast Form wrapped in a Bootstrap card -->
+      <div class="card mb-5">
+        <div class="card-header">
+          <h2>CREATE PODCAST</h2>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="mb-3">
+              <label for="podcastTitle" class="form-label">Judul:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="podcastTitle"
+                placeholder="isi..."
+              />
+            </div>
+            <div class="mb-3">
+              <label for="podcastGenre" class="form-label">Genre:</label>
+              <select multiple class="form-select" id="podcastGenre">
+                <option>Genre1</option>
+                <option>Genre2</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="podcastDuration" class="form-label">Durasi:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="podcastDuration"
+                placeholder="isi..."
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">SUBMIT</button>
+          </form>
+        </div>
       </div>
 
       <div class="mb-5">
