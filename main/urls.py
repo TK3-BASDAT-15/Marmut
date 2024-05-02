@@ -12,5 +12,4 @@ urlpatterns = [
     path('login/', login_user, name='login'), #sesuaikan dengan nama fungsi yang dibuat
     path('logout/', logout_user, name='logout'),
 
-
 ]

@@ -1,54 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'base.html' %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h5 class="text-center mb-4">Login</h5>
-            <div class="card">
-                <div class="card-body">
-                    <form method="POST" action="">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" name="username" id="username" placeholder="Enter username" class="form-control">
-                        </div>
-                                
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" id="password" placeholder="Enter password" class="form-control">
-                        </div>
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h5 class="text-center mb-4">Login</h5>
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" placeholder="Enter username" class="form-control">
+                            </div>
+                                    
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" placeholder="Enter password" class="form-control">
+                            </div>
 
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
 
-                    {% if messages %}
-                        <ul class="list-unstyled">
-                            {% for message in messages %}
-                                <li class="text-danger">{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}     
-
-                    <p class="text-center">Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a></p>
+                        {% if messages %}
+                            <ul class="list-unstyled">
+                                {% for message in messages %}
+                                    <li class="text-danger">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}     
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-
+{% endblock %}
 
 
