@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="text-center mb-4">
+          <h2>List Album</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="text-align: center;">Judul</th>
+                <th style="text-align: center;">Label</th>
+                <th style="text-align: center;">Jumlah Lagu</th>
+                <th style="text-align: center;">Total Durasi</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for album in albums %}
+              <tr>
+                <td style="max-width: 200px; word-wrap: break-word;text-align: center;">
+                    {{ album.judul }}
+                </td>
+                <td style="text-align: center;">{{ album.nama }}</td>
+                <td style="text-align: center;">{{ album.jumlah_lagu }}</td>
+                <td style="text-align: center;">{{ album.total_durasi }}</td>
+                <td style="text-align: center;">
+                  <div class="button-group" style="padding: 10px;">
+                    <a href="{{ album.id }}/songs" class="btn btn-info btn-sm" style="width: 100%;">Lihat Daftar Lagu</a>
+                  </div>
+                  <div class="button-group" style="padding: 10px;">
+                    <a href="{{ album.id }}/add-song" class= "btn btn-success btn-sm" style="width: 100%;">Tambah Lagu</a>
+                  </div>
+                  <div class="button-group" style="padding: 10px;">
+                    <a href="/album/{{ album.id }}/delete" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
+                  </div>
+                </td> 
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <a href="add-album" class="btn btn-primary w-100">Tambah Album</a>
+    </div>
+    </div>
+  </div>
+{% endblock content %}
