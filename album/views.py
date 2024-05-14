@@ -49,7 +49,7 @@ class AlbumView(View):
     def get(self, request: HttpRequest):
         req_full_path = request.get_full_path()
 
-        if req_full_path.endswith('/add-album/'):
+        if req_full_path.endswith('/create/'):
             return self.__get_add_album(request)
         elif req_full_path.endswith('/'):
             return self.__get_album_list(request)
@@ -57,7 +57,7 @@ class AlbumView(View):
     def post(self, request: HttpRequest):
         req_full_path = request.get_full_path()
 
-        if req_full_path.endswith('/add-album/'):
+        if req_full_path.endswith('/create/'):
             return self.__post_add_album(request)
     
 class SingleAlbumView(View):
