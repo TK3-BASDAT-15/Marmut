@@ -81,9 +81,8 @@ class RegisterView(View):
             if cleaned_data['songwriter']:
                 query = 'INSERT INTO songwriter (id, email_akun, id_pemilik_hak_cipta) VALUES (%s, %s, %s)'
                 cursor.execute(query, (uuid.uuid4(), cleaned_data['email'], None))
-            
-        context['success'] = 'User registered successfully'
-        return render(request, 'login.html', context=context)
+
+        return redirect(reverse('main:login'))
         
     def __post_register_label(self, request: HttpRequest):
         return render(request, 'registerLabel.html')
@@ -91,10 +90,10 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request: HttpRequest):
-        authorization = request.headers.get('Authorization')
+        session_token = request.get_signed_cookie('session_token')
 
-        if authorization is not None:
-            return self.__get_login_with_auth(authorization)
+        if session_token is not None:
+            return self.__get_login_with_auth(session_token)
         else:
             return render(request, 'login.html')
 
@@ -160,15 +159,9 @@ class LoginView(View):
 
         return response
     
-    def __get_login_with_auth(self, authorization: str):
+    def __get_login_with_auth(self, request: HttpRequest, session_token: str):
         context = {}
 
-        if not authorization.startswith('Bearer '):
-            context['error'] = 'Invalid authorization header'
-            return render(request, 'login.html', context=context,
-                          status=HttpResponseBadRequest.status_code)
-        
-        session_token = authorization[7:]
         decoded_token = jwt.decode(session_token, env('JWT_KEY'), algorithms=['HS256'])
 
         if decoded_token['expires_at'] < datetime.now().timestamp():

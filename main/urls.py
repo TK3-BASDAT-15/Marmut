@@ -16,5 +16,5 @@ urlpatterns = [
     path('register/label/', register_view, name='register_label'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('dashboard/', main_view, name='show_dashboard'),
+    path('dashboard/', dashboard_view, name='show_dashboard'),
 ]
