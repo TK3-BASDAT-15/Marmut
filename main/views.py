@@ -8,6 +8,7 @@ import uuid
 import jwt
 from marmut_15.settings import env
 from datetime import datetime, timedelta
+from .utils import decode_session_token
 
 
 # Create your views here.
@@ -18,6 +19,10 @@ class MainView(View):
 
 class RegisterView(View):
     def get(self, request: HttpRequest):
+        if 'session_token' in request.COOKIES:
+            session_token = request.COOKIES['session_token']
+            return self.__get_register_with_auth(request, session_token)
+
         req_full_path = request.get_full_path()
 
         if req_full_path.endswith('/register/'):
@@ -34,6 +39,23 @@ class RegisterView(View):
             return self.__post_register_user(request)
         elif req_full_path.endswith('/register/label/'):
             return self.__post_register_label(request)
+        
+    def __get_register_with_auth(self, request: HttpRequest, session_token: str):
+        req_full_path = request.get_full_path()
+
+        try:
+            decode_session_token(session_token)
+        except:
+            if req_full_path.endswith('/register/'):
+                return render(request, 'chooseRegisterRole.html')
+            elif req_full_path.endswith('/register/user/'):
+                return render(request, 'registerUser.html')
+            elif req_full_path.endswith('/register/label/'):
+                return render(request, 'registerLabel.html')
+            else:
+                raise 'An unexpected error occured'
+        
+        return redirect(reverse('main:show_dashboard'))
         
     def __post_register_user(self, request: HttpRequest):
         form = RegisterForm(request.POST)
@@ -90,12 +112,11 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request: HttpRequest):
-        session_token = request.COOKIES['session_token']
-
-        if session_token is not None:
-            return self.__get_login_with_auth(session_token)
-        else:
+        if 'session_token' not in request.COOKIES:
             return render(request, 'login.html')
+        else:
+            session_token = request.COOKIES['session_token']
+            return self.__get_login_with_auth(request, session_token)
 
     def post(self, request: HttpRequest):
         form = LoginForm(request.POST)
@@ -146,8 +167,8 @@ class LoginView(View):
             if songwriter is not None:
                 payload['isSongwriter'] = 'SONGWRITER'
 
-        session_id = uuid.uuid4()
-        payload['sessionId'] = str(session_id)
+            session_id = str(uuid.uuid4())
+            payload['sessionId'] = session_id
 
         expires_at = datetime.now() + timedelta(hours=1)
         payload['expiresAt'] = expires_at.timestamp()
@@ -160,22 +181,10 @@ class LoginView(View):
         return response
     
     def __get_login_with_auth(self, request: HttpRequest, session_token: str):
-        context = {}
-
-        decoded_token = jwt.decode(session_token, env('JWT_KEY'), algorithms=['HS256'])
-
-        if decoded_token['expires_at'] < datetime.now().timestamp():
+        try:
+            decode_session_token(session_token)
+        except:
             return render(request, 'login.html')
-        
-        with connection.cursor() as cursor:
-            query = 'SELECT id FROM session WHERE session.id = %s'
-            cursor.execute(query, (decoded_token['sessionId'],))
-            session_id = cursor.fetchone()
-
-        if session_id is None:
-            context['error'] = 'Invalid session'
-            return render(request, 'login.html', context=context,
-                          status=HttpResponseBadRequest.status_code)
         
         return redirect(reverse('main:show_dashboard'))
 
@@ -189,15 +198,19 @@ class LogoutView(View):
 
 class DashboardView(View):
     def get(self, request: HttpRequest):
+        if 'session_token' not in request.COOKIES:
+            return redirect(reverse('main:login'))
+
         session_token = request.COOKIES['session_token']
-        decoded_token = jwt.decode(session_token, env('JWT_KEY'), algorithms=['HS256'])
+
+        try:
+            decoded_token = decode_session_token(session_token)
+        except:
+            return redirect(reverse('main:login'))
 
         with connection.cursor() as cursor:
             query = 'SELECT nama FROM akun WHERE email = %s'
             cursor.execute(query, (decoded_token['email'],))
             akun = {'nama': cursor.fetchone()[0]}
 
-        if session_token is None:
-            return redirect(reverse('main:login'))
-        else:
-            return render(request, 'dashboard.html', context={'akun': akun})
+        return render(request, 'dashboard.html', context={'akun': akun})
