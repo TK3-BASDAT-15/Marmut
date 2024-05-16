@@ -1,27 +1,20 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.http import *
-from django.core import serializers
-from django.shortcuts import redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages  
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-import datetime
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.views import View
 from django.db import connection
-from .forms import RegisterForm
+from .forms import LoginForm, RegisterForm
 import uuid
+import jwt
+from marmut_15.settings import env
+from datetime import datetime, timedelta
 
 
 # Create your views here.
 class MainView(View):
     def get(self, request: HttpRequest):
         return render(request, 'main.html')
+
 
 class RegisterView(View):
     def get(self, request: HttpRequest):
@@ -48,7 +41,6 @@ class RegisterView(View):
 
         if not form.is_valid():
             context['error'] = 'Invalid form input'
-            context['form'] = form
             return render(request, 'registerUser.html', context=context,
                           status=HttpResponseBadRequest.status_code)
         
@@ -60,7 +52,8 @@ class RegisterView(View):
             case 'female':
                 gender = 1
             case _:
-                context['error'] = 'no. just no.'
+                context['error'] = 'support for other gender types like attack helicopter \
+                                    has not been implemented yet'
                 return render(request, 'registerUser.html', context=context,
                               status=HttpResponseBadRequest.status_code)
         
@@ -75,13 +68,13 @@ class RegisterView(View):
                                cleaned_data['name'], gender, cleaned_data['birth_place'],
                                cleaned_data['birth_date'], False, cleaned_data['city']))
             except:
-                context['error'] = 'Failed to register user'
+                context['error'] = 'User already exists'
                 return render(request, 'registerUser.html', context=context,
                               status=HttpResponseBadRequest.status_code)
             
             if cleaned_data['podcaster']:
                 query = 'INSERT INTO podcaster (email) VALUES (%s)'
-                cursor.execute(query, cleaned_data['email'])
+                cursor.execute(query, (cleaned_data['email'],))
             if cleaned_data['artist']:
                 query = 'INSERT INTO artist (id, email_akun, id_pemilik_hak_cipta) VALUES (%s, %s, %s)'
                 cursor.execute(query, (uuid.uuid4(), cleaned_data['email'], None))
@@ -98,18 +91,106 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request: HttpRequest):
-        req_full_path = request.get_full_path()
+        authorization = request.headers.get('Authorization')
 
-        return render(request, 'login.html')
+        if authorization is not None:
+            return self.__get_login_with_auth(authorization)
+        else:
+            return render(request, 'login.html')
 
     def post(self, request: HttpRequest):
-        req_full_path = request.get_full_path()
+        form = LoginForm(request.POST)
+        context = {}
+
+        if not form.is_valid():
+            context['error'] = 'Invalid form input'
+            return render(request, 'login.html', context=context,
+                          status=HttpResponseBadRequest.status_code)
+        
+        cleaned_data = form.cleaned_data
+
+        payload = {}
+
+        with connection.cursor() as cursor:
+            query = 'SELECT email FROM akun WHERE email = %s AND password = %s'
+            cursor.execute(query, (cleaned_data['email'], cleaned_data['password']))
+            akun = cursor.fetchone()
+
+            if akun is None:
+                context['error'] = 'Invalid email or password'
+                return render(request, 'login.html', context=context,
+                            status=HttpResponseBadRequest.status_code)
+            
+            payload['email'] = cleaned_data['email']
+            
+            query = 'SELECT akun.email FROM akun JOIN artist ON akun.email = artist.email_akun \
+                    WHERE akun.email = %s'
+            cursor.execute(query, (cleaned_data['email'],))
+            artist = cursor.fetchone()
+
+            if artist is not None:
+                payload['is_artist'] = True
+
+            query = 'SELECT akun.email FROM akun JOIN podcaster ON akun.email = podcaster.email \
+                    WHERE akun.email = %s'
+            cursor.execute(query, (cleaned_data['email'],))
+            podcaster = cursor.fetchone()
+
+            if podcaster is not None:
+                payload['is_podcaster'] = 'PODCASTER'
+
+            query = 'SELECT akun.email FROM akun JOIN songwriter ON akun.email = songwriter.email_akun \
+                    WHERE akun.email = %s'
+            cursor.execute(query, (cleaned_data['email'],))
+            songwriter = cursor.fetchone()
+
+            if songwriter is not None:
+                payload['is_songwriter'] = 'SONGWRITER'
+
+        session_id = uuid.uuid4()
+        payload['sessionId'] = str(session_id)
+
+        expires_at = datetime.now() + timedelta(hours=1)
+        payload['expires_at'] = expires_at.timestamp()
+
+        session_token = jwt.encode(payload, env('JWT_KEY'), algorithm='HS256')
+
+        response = redirect(reverse('main:show_dashboard'))
+        response.set_cookie('session_token', session_token)
+
+        return response
+    
+    def __get_login_with_auth(self, authorization: str):
+        context = {}
+
+        if not authorization.startswith('Bearer '):
+            context['error'] = 'Invalid authorization header'
+            return render(request, 'login.html', context=context,
+                          status=HttpResponseBadRequest.status_code)
+        
+        session_token = authorization[7:]
+        decoded_token = jwt.decode(session_token, env('JWT_KEY'), algorithms=['HS256'])
+
+        if decoded_token['expires_at'] < datetime.now().timestamp():
+            return render(request, 'login.html')
+        
+        with connection.cursor() as cursor:
+            query = 'SELECT id FROM session WHERE session.id = %s'
+            cursor.execute(query, (decoded_token['sessionId'],))
+            session_id = cursor.fetchone()
+
+        if session_id is None:
+            context['error'] = 'Invalid session'
+            return render(request, 'login.html', context=context,
+                          status=HttpResponseBadRequest.status_code)
+        
+        return redirect(reverse('main:show_dashboard'))
 
 
 class LogoutView(View):
-    def get(self, request: HttpRequest):
+    def get(self):
         response = redirect(reverse('main:login'))
-        response.delete_cookie('last_login')
+        response.delete_cookie('session_token')
         return response
 
 
