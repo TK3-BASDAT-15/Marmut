@@ -148,24 +148,21 @@ class LoginView(View):
             cursor.execute(query, (cleaned_data['email'],))
             artist = cursor.fetchone()
 
-            if artist is not None:
-                payload['isArtist'] = True
+            payload['isArtist'] = artist is not None
 
             query = 'SELECT akun.email FROM akun JOIN podcaster ON akun.email = podcaster.email \
                     WHERE akun.email = %s'
             cursor.execute(query, (cleaned_data['email'],))
             podcaster = cursor.fetchone()
 
-            if podcaster is not None:
-                payload['isPodcaster'] = 'PODCASTER'
+            payload['isPodcaster'] = podcaster is not None
 
             query = 'SELECT akun.email FROM akun JOIN songwriter ON akun.email = songwriter.email_akun \
                     WHERE akun.email = %s'
             cursor.execute(query, (cleaned_data['email'],))
             songwriter = cursor.fetchone()
 
-            if songwriter is not None:
-                payload['isSongwriter'] = 'SONGWRITER'
+            payload['isSongwriter'] = songwriter is not None
 
             session_id = str(uuid.uuid4())
             payload['sessionId'] = session_id

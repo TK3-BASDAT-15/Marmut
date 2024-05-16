@@ -1,4 +1,3 @@
-from django.db import connection
 from marmut_15.settings import env
 from datetime import datetime
 import jwt
