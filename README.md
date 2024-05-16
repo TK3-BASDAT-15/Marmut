@@ -17,6 +17,7 @@ Sebelum menjalankan program untuk pertama kalinya, buka Terminal / Command Promp
     PG_PASSWORD="<password_db>"
     PG_HOST="<hostname_db>"
     PG_PORT="<port_db>"
+    JWT_KEY="<jwt_symmetric_key>"
     ```
 
 5. Selesai
