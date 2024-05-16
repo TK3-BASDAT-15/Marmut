@@ -90,7 +90,7 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request: HttpRequest):
-        session_token = request.get_signed_cookie('session_token')
+        session_token = request.COOKIES['session_token']
 
         if session_token is not None:
             return self.__get_login_with_auth(session_token)
