@@ -18,6 +18,7 @@
           </tr>
         </thead>
         <tbody>
+          {% for song in songs %}
           <tr>
             <td
               style="
@@ -26,15 +27,15 @@
                 text-align: center;
               "
             >
-              Lagu1
+              {{ song.judul_konten }}
             </td>
-            <td style="text-align: center">2 menit</td>
-            <td style="text-align: center">3</td>
-            <td style="text-align: center">0</td>
+            <td style="text-align: center">{{ song.durasi_konten }} menit</td>
+            <td style="text-align: center">{{ song.total_play_song }}</td>
+            <td style="text-align: center">{{ song.total_download_song }}</td>
             <td style="text-align: center">
               <div class="button-group" style="padding: 10px">
                 <a
-                  href="/song/{{ songs.0.id_konten }}"
+                  href="/song/{{ song.id_konten }}"
                   class="btn btn-info btn-sm"
                   style="width: 100%"
                   >Lihat Detail</a
@@ -42,7 +43,7 @@
               </div>
               <div class="button-group" style="padding: 10px">
                 <a
-                  href="{{ album.id }}/delete-song/{{ songs.0.id }}"
+                  href="{{ album.id }}/delete-song/{{ song.id }}"
                   class="btn btn-danger btn-sm"
                   style="width: 100%"
                   >Hapus</a
@@ -50,53 +51,7 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td
-              style="
-                max-width: 200px;
-                word-wrap: break-word;
-                text-align: center;
-              "
-            >
-              Lagu2
-            </td>
-            <td style="text-align: center">3 menit</td>
-            <td style="text-align: center">2</td>
-            <td style="text-align: center">2</td>
-            <td style="text-align: center">
-              <div class="button-group" style="padding: 10px">
-                <a
-                  href="/song/{{ songs.0.id_konten }}"
-                  class="btn btn-info btn-sm"
-                  style="width: 100%"
-                  >Lihat Detail</a
-                >
-              </div>
-              <div class="button-group" style="padding: 10px">
-                <a
-                  href="{{ album.id }}/delete-song/{{ songs.0.id }}"
-                  class="btn btn-danger btn-sm"
-                  style="width: 100%"
-                  >Hapus</a
-                >
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td
-              style="
-                max-width: 200px;
-                word-wrap: break-word;
-                text-align: center;
-              "
-            >
-              ...
-            </td>
-            <td style="text-align: center"></td>
-            <td style="text-align: center">...</td>
-            <td style="text-align: center">...</td>
-            <td style="text-align: center">...</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

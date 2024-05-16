@@ -58,12 +58,11 @@
                     </li>
                     
                     -->
+                    {% if akun %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        Welcome,<a class="nav-link d-inline" href="#">{{ akun.nama }}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Registrasi</a>
-                    </li>
+                    {% endif %}
 
                     
                     

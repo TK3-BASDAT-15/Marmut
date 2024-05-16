@@ -1,18 +1,20 @@
 from django.urls import path
-from main.views import choose_register, register_user, show_main, register, show_dashboard #sesuaikan dengan nama fungsi yang dibuat
-from main.views import login_user #sesuaikan dengan nama fungsi yang dibuat
-from main.views import logout_user
+from main.views import *
 
 app_name = 'main'
 
-urlpatterns = [
-    path('', show_main, name='show_main'),
-    path('main/', show_main, name='show_main'),
-    path('register/', register, name='register'), #sesuaikan dengan nama fungsi yang dibuat
-    path('login/', login_user, name='login'), #sesuaikan dengan nama fungsi yang dibuat
-    path('logout/', logout_user, name='logout'),
-    path('register-user/', register_user, name='register_user'),
-    path('choose-register/', choose_register, name='choose_register'), 
-    path('dashboard/', show_dashboard, name='show_dashboard')
+main_view = MainView.as_view()
+register_view = RegisterView.as_view()
+login_view = LoginView.as_view()
+logout_view = LogoutView.as_view()
+dashboard_view = DashboardView.as_view()
 
+urlpatterns = [
+    path('main/', main_view, name='show_main'),
+    path('register/', register_view, name='choose_register'),
+    path('register/user/', register_view, name='register_user'),
+    path('register/label/', register_view, name='register_label'),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('dashboard/', dashboard_view, name='show_dashboard'),
 ]
