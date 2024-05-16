@@ -128,7 +128,7 @@ class LoginView(View):
             artist = cursor.fetchone()
 
             if artist is not None:
-                payload['is_artist'] = True
+                payload['isArtist'] = True
 
             query = 'SELECT akun.email FROM akun JOIN podcaster ON akun.email = podcaster.email \
                     WHERE akun.email = %s'
@@ -136,7 +136,7 @@ class LoginView(View):
             podcaster = cursor.fetchone()
 
             if podcaster is not None:
-                payload['is_podcaster'] = 'PODCASTER'
+                payload['isPodcaster'] = 'PODCASTER'
 
             query = 'SELECT akun.email FROM akun JOIN songwriter ON akun.email = songwriter.email_akun \
                     WHERE akun.email = %s'
@@ -144,13 +144,13 @@ class LoginView(View):
             songwriter = cursor.fetchone()
 
             if songwriter is not None:
-                payload['is_songwriter'] = 'SONGWRITER'
+                payload['isSongwriter'] = 'SONGWRITER'
 
         session_id = uuid.uuid4()
         payload['sessionId'] = str(session_id)
 
         expires_at = datetime.now() + timedelta(hours=1)
-        payload['expires_at'] = expires_at.timestamp()
+        payload['expiresAt'] = expires_at.timestamp()
 
         session_token = jwt.encode(payload, env('JWT_KEY'), algorithm='HS256')
 
@@ -189,4 +189,15 @@ class LogoutView(View):
 
 class DashboardView(View):
     def get(self, request: HttpRequest):
-        return render(request, 'dashboard.html')
+        session_token = request.COOKIES['session_token']
+        decoded_token = jwt.decode(session_token, env('JWT_KEY'), algorithms=['HS256'])
+
+        with connection.cursor() as cursor:
+            query = 'SELECT nama FROM akun WHERE email = %s'
+            cursor.execute(query, (decoded_token['email'],))
+            akun = {'nama': cursor.fetchone()[0]}
+
+        if session_token is None:
+            return redirect(reverse('main:login'))
+        else:
+            return render(request, 'dashboard.html', context={'akun': akun})
