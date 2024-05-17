@@ -31,5 +31,4 @@ urlpatterns = [
     path('album/', include('album.urls')),
     path('song/', include('song.urls')),
     path('chart/', include('chart.urls')),
-
 ]
