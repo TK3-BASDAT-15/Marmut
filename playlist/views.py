@@ -1,13 +1,31 @@
+from django.db import connection
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-
-#@login_required(login_url= "/login")
 
 # CRUD Kelola Playlist
+#@login_required(login_url= "/login")
 def user_playlist(request):
-    return render(request, 'userPlaylist.html')
+    email = request.session.get('email')
+    print(email)
+
+    with connection.cursor() as cursor:
+        query = f"select id_user_playlist, jumlah_lagu, judul, total_durasi FROM user_playlist WHERE email_pembuat = '{email}';"
+        cursor.execute(query)
+        
+        entries = cursor.fetchall()
+        print(entries)
+
+        context = {
+        'data_playlist': [{
+            'id_user_playlist': row[0],
+            'jumlah_lagu': row[1],
+            'judul': row[2],
+            'total_durasi': row[3],
+            } for row in entries],
+        }
+
+    return render(request, 'userPlaylist.html', context)
 
 def add_playlist(request):
         return render(request, 'addPlaylist.html')
