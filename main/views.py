@@ -8,7 +8,7 @@ import uuid
 import jwt
 from marmut_15.settings import env
 from datetime import datetime, timedelta
-from .utils import decode_session_token
+from marmut_15.utils import decode_session_token
 
 
 # Create your views here.
