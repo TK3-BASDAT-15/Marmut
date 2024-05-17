@@ -80,6 +80,15 @@ class RegisterView(View):
                               status=HttpResponseBadRequest.status_code)
         
         with connection.cursor() as cursor:
+            query = 'SELECT email FROM label WHERE email = %s'
+            cursor.execute(query, (cleaned_data['email'],))
+            label = cursor.fetchone()
+
+            if label is not None:
+                context['error'] = 'User/label already exists'
+                return render(request, 'registerUser.html', context=context,
+                              status=HttpResponseBadRequest.status_code)
+
             query = "INSERT INTO akun \
                     (email, password, nama, gender, tempat_lahir, tanggal_lahir, is_verified, kota_asal) \
                     VALUES \
@@ -90,7 +99,7 @@ class RegisterView(View):
                                cleaned_data['name'], gender, cleaned_data['birth_place'],
                                cleaned_data['birth_date'], False, cleaned_data['city']))
             except:
-                context['error'] = 'User already exists'
+                context['error'] = 'User/label already exists'
                 return render(request, 'registerUser.html', context=context,
                               status=HttpResponseBadRequest.status_code)
             
@@ -118,6 +127,15 @@ class RegisterView(View):
         cleaned_data = form.cleaned_data
 
         with connection.cursor() as cursor:
+            query = 'SELECT email FROM akun WHERE email = %s'
+            cursor.execute(query, (cleaned_data['email'],))
+            akun = cursor.fetchone()
+
+            if akun is not None:
+                context['error'] = 'User/label already exists'
+                return render(request, 'registerLabel.html', context=context,
+                              status=HttpResponseBadRequest.status_code)
+
             query = 'INSERT INTO label \
                     (id, nama, email, password, kontak) \
                     VALUES \
@@ -127,7 +145,7 @@ class RegisterView(View):
                 cursor.execute(query, (uuid.uuid4(), cleaned_data['name'], cleaned_data['email'],
                                cleaned_data['password'], cleaned_data['contact']))
             except:
-                context['error'] = 'Label already exists'
+                context['error'] = 'User/label already exists'
                 return render(request, 'registerLabel.html', context=context,
                               status=HttpResponseBadRequest.status_code)
 
