@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.http import *
 from django.views import View
 from django.db import connection
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, UserRegisterForm, LabelRegisterForm
 import uuid
 import jwt
 from marmut_15.settings import env
@@ -58,7 +58,7 @@ class RegisterView(View):
         return redirect(reverse('main:show_dashboard'))
         
     def __post_register_user(self, request: HttpRequest):
-        form = RegisterForm(request.POST)
+        form = UserRegisterForm(request.POST)
         context = {}
 
         if not form.is_valid():
@@ -107,7 +107,31 @@ class RegisterView(View):
         return redirect(reverse('main:login'))
         
     def __post_register_label(self, request: HttpRequest):
-        return render(request, 'registerLabel.html')
+        form = LabelRegisterForm(request.POST)
+        context = {}
+
+        if not form.is_valid():
+            context['error'] = 'Invalid form input'
+            return render(request, 'registerLabel.html', context=context,
+                          status=HttpResponseBadRequest.status_code)
+
+        cleaned_data = form.cleaned_data
+
+        with connection.cursor() as cursor:
+            query = 'INSERT INTO label \
+                    (id, nama, email, password, kontak) \
+                    VALUES \
+                    (%s, %s, %s, %s, %s)'
+
+            try:
+                cursor.execute(query, (uuid.uuid4(), cleaned_data['name'], cleaned_data['email'],
+                               cleaned_data['password'], cleaned_data['contact']))
+            except:
+                context['error'] = 'Label already exists'
+                return render(request, 'registerLabel.html', context=context,
+                              status=HttpResponseBadRequest.status_code)
+
+        return redirect(reverse('main:login'))
 
 
 class LoginView(View):
@@ -129,43 +153,56 @@ class LoginView(View):
         
         cleaned_data = form.cleaned_data
 
-        payload = {}
+        payload = {
+            'email': None,
+            'isLabel': False,
+            'isArtist': False,
+            'isPodcaster': False,
+            'isSongwriter': False
+        }
 
         with connection.cursor() as cursor:
-            query = 'SELECT email FROM akun WHERE email = %s AND password = %s'
+            query = 'SELECT email FROM label WHERE email = %s AND password = %s'
             cursor.execute(query, (cleaned_data['email'], cleaned_data['password']))
-            akun = cursor.fetchone()
+            label = cursor.fetchone()
 
-            if akun is None:
-                context['error'] = 'Invalid email or password'
-                return render(request, 'login.html', context=context,
-                            status=HttpResponseBadRequest.status_code)
-            
-            payload['email'] = cleaned_data['email']
-            
-            query = 'SELECT akun.email FROM akun JOIN artist ON akun.email = artist.email_akun \
-                    WHERE akun.email = %s'
-            cursor.execute(query, (cleaned_data['email'],))
-            artist = cursor.fetchone()
+            if label is not None:
+                payload['isLabel'] = True
+            else:
+                query = 'SELECT email FROM akun WHERE email = %s AND password = %s'
+                cursor.execute(query, (cleaned_data['email'], cleaned_data['password']))
+                akun = cursor.fetchone()
 
-            payload['isArtist'] = artist is not None
+                if akun is None:
+                    context['error'] = 'Invalid email or password'
+                    return render(request, 'login.html', context=context,
+                                status=HttpResponseBadRequest.status_code)
+                
+                query = 'SELECT akun.email FROM akun JOIN artist ON akun.email = artist.email_akun \
+                        WHERE akun.email = %s'
+                cursor.execute(query, (cleaned_data['email'],))
+                artist = cursor.fetchone()
 
-            query = 'SELECT akun.email FROM akun JOIN podcaster ON akun.email = podcaster.email \
-                    WHERE akun.email = %s'
-            cursor.execute(query, (cleaned_data['email'],))
-            podcaster = cursor.fetchone()
+                payload['isArtist'] = artist is not None
 
-            payload['isPodcaster'] = podcaster is not None
+                query = 'SELECT akun.email FROM akun JOIN podcaster ON akun.email = podcaster.email \
+                        WHERE akun.email = %s'
+                cursor.execute(query, (cleaned_data['email'],))
+                podcaster = cursor.fetchone()
 
-            query = 'SELECT akun.email FROM akun JOIN songwriter ON akun.email = songwriter.email_akun \
-                    WHERE akun.email = %s'
-            cursor.execute(query, (cleaned_data['email'],))
-            songwriter = cursor.fetchone()
+                payload['isPodcaster'] = podcaster is not None
 
-            payload['isSongwriter'] = songwriter is not None
+                query = 'SELECT akun.email FROM akun JOIN songwriter ON akun.email = songwriter.email_akun \
+                        WHERE akun.email = %s'
+                cursor.execute(query, (cleaned_data['email'],))
+                songwriter = cursor.fetchone()
 
-            session_id = str(uuid.uuid4())
-            payload['sessionId'] = session_id
+                payload['isSongwriter'] = songwriter is not None
+
+                session_id = str(uuid.uuid4())
+                payload['sessionId'] = session_id
+
+        payload['email'] = cleaned_data['email']
 
         expires_at = datetime.now() + timedelta(hours=1)
         payload['expiresAt'] = expires_at.timestamp()
@@ -187,7 +224,7 @@ class LoginView(View):
 
 
 class LogoutView(View):
-    def get(self):
+    def get(self, request: HttpRequest):
         response = redirect(reverse('main:login'))
         response.delete_cookie('session_token')
         return response
@@ -204,10 +241,19 @@ class DashboardView(View):
             decoded_token = decode_session_token(session_token)
         except:
             return redirect(reverse('main:login'))
+        
+        context = {}
 
         with connection.cursor() as cursor:
             query = 'SELECT nama FROM akun WHERE email = %s'
             cursor.execute(query, (decoded_token['email'],))
-            akun = {'nama': cursor.fetchone()[0]}
+            nama = cursor.fetchone()
 
-        return render(request, 'dashboard.html', context={'akun': akun})
+            if nama is None:
+                query = 'SELECT nama FROM label WHERE email = %s'
+                cursor.execute(query, (decoded_token['email'],))
+                nama = cursor.fetchone()
+
+            context['nama'] = nama[0]
+
+        return render(request, 'dashboard.html', context=context)

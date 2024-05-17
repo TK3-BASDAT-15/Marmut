@@ -3,6 +3,11 @@
 {% block content %}
 
 <div class="container mt-5">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <h1 class="m-0 text-center">ATTN: {{ error }}</h1>
+    </div>
+    {% endif %}
     <div class="text-center">
         <h2 class="font-bold">Register</h2>
     </div>
@@ -26,10 +31,9 @@
                     <label for="contact">Contact</label>
                     <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter contact">
                 </div>
-                <!--
+                
                 <button type="submit" class="btn btn-primary btn-block">Register</button>
-                 -->
-                <a href="{% url 'main:login' %}" class="btn btn-primary btn-block">Login</a>
+                
             </form>
         </div>
     </div>
