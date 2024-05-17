@@ -1,12 +1,20 @@
 from django.db import connection
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from marmut_15.utils import decode_session_token, extract_session_token
+from django.http import HttpRequest
 
 
 # CRUD Kelola Playlist
 #@login_required(login_url= "/login")
-def user_playlist(request):
-    email = request.session.get('email')
+def user_playlist(request: HttpRequest):
+    try:
+        session_token = extract_session_token(request)
+        decoded_token = decode_session_token(session_token)
+    except:
+        return redirect(reverse('main:login'))
+
+    email = decoded_token['email']
     print(email)
 
     with connection.cursor() as cursor:
