@@ -17,7 +17,7 @@ def decode_session_token(session_token: str):
     return decoded_token
 
 
-def extract_session_token(request):
+def extract_session_token(request: HttpRequest):
     if 'session_token' not in request.COOKIES:
         raise 'Session token is missing'
 

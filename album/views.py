@@ -35,7 +35,7 @@ class AlbumView(View):
 
         if req_full_path.endswith('/create/'):
             return self.__post_add_album(request, decoded_token)
-        
+
 
     def __get_album_list(self, request: HttpRequest, decoded_token: dict):
         is_label = decoded_token['isLabel']
@@ -50,11 +50,11 @@ class AlbumView(View):
         context = {}
 
         with connection.cursor() as cursor:
-            query = 'SELECT album.judul, label.nama, album.jumlah_lagu, album.total_durasi FROM album \
+            query = 'SELECT album.id, album.judul, label.nama, album.jumlah_lagu, album.total_durasi FROM album \
                     JOIN label ON album.id_label = label.id'
             cursor.execute(query)
 
-            columns = ['judul_album', 'nama_label', 'jumlah_lagu_album', 'total_durasi_album']
+            columns = ['id_album', 'judul_album', 'nama_label', 'jumlah_lagu_album', 'total_durasi_album']
             list_album = [dict(zip(columns, row)) for row in cursor.fetchall()]
             context['list_album'] = list_album
 
@@ -131,9 +131,10 @@ class AlbumView(View):
         except:
             return redirect(reverse('main:login'))
         
+        context = {}
+        
         with connection.cursor() as cursor:
             data = request.POST.copy()
-            context = {}
 
             if decoded_token['isArtist']:
                 query = 'SELECT id FROM artist \
@@ -146,7 +147,7 @@ class AlbumView(View):
                     return redirect(reverse('main:login'))
                 
                 data['artist'] = artist_id
-            elif decoded_token['songwriter']:
+            elif decoded_token['isSongwriter']:
                 query = 'SELECT id FROM songwriter \
                         WHERE email_akun = %s'
                 cursor.execute(query, (decoded_token['email'],))
@@ -174,7 +175,7 @@ class AlbumView(View):
                 context['error'] = 'Album already exists'
                 return render(request, 'addAlbum.html', context=context)
         
-        return redirect(reverse('album:album'))
+        return redirect(reverse('album:list'))
 
 
     
@@ -188,13 +189,6 @@ class AlbumDetailView(View):
             return self.__get_add_song(request, id_album)
         elif req_full_path.endswith('/delete/'):
             return self.__get_delete_album(request, id_album)
-    
-
-    def delete(self, request: HttpRequest, id_album):
-        req_full_path = request.get_full_path()
-
-        if req_full_path.endswith('/delete/'):
-            return self.__delete_album(request, id_album)
         
 
     def __get_songs(self, request: HttpRequest, id_album):
@@ -255,13 +249,12 @@ class AlbumDetailView(View):
         return render(request, 'addSongToAlbum.html', context=context)
     
 
-    def __get_delete_album(self, request: HttpRequest, id_album):
-        pass
-    
-
-    def __delete_album(self, request: HttpRequest, id_album):
+    def __get_delete_album(self, request: HttpRequest, id_album: str):
         with connection.cursor() as cursor:
             query = 'DELETE FROM album WHERE id = %s'
             cursor.execute(query, (id_album,))
 
-        return HttpResponse(status=204)
+            query = 'DELETE FROM song WHERE id_album = %s'
+            cursor.execute(query, (id_album,))
+
+        return redirect(reverse('album:list'))
