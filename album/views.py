@@ -6,6 +6,7 @@ from django.views import View
 from marmut_15.utils import decode_session_token, extract_session_token
 from album.forms import AddAlbumForm
 import uuid
+from datetime import datetime
 
 # Create your views here.
 class AlbumView(View):
@@ -164,17 +165,30 @@ class AlbumView(View):
             if not form.is_valid():
                 context['error'] = 'Invalid form input'
                 return render(request, 'addAlbum.html', context=context)
+            
+            cleaned_data = form.cleaned_data
 
+            id_album = uuid.uuid4()
             query = 'INSERT INTO album (id, judul, id_label) \
                     VALUES (%s, %s, %s)'
 
             try:
-                cursor.execute(query, (uuid.uuid4(), form.cleaned_data['album_title'],
-                                       form.cleaned_data['label']))
+                cursor.execute(query, (id_album, cleaned_data['album_title'], cleaned_data['label']))
             except:
                 context['error'] = 'Album already exists'
                 return render(request, 'addAlbum.html', context=context)
-        
+
+            id_konten = uuid.uuid4()
+            now = datetime.now()
+            query = 'INSERT INTO konten (id, judul, tanggal_rilis, tahun, durasi) \
+                    VALUES (%s, %s, %s, %s, %s)'
+            cursor.execute(query, (id_konten, cleaned_data['song_title'], now,
+                                   now.year, cleaned_data['duration']))
+            
+            query = 'INSERT INTO song (id_konten, id_artist, id_album) \
+                    VALUES (%s, %s, %s)'
+            cursor.execute(query, (id_konten, cleaned_data['artist'], id_album))
+
         return redirect(reverse('album:list'))
 
 
