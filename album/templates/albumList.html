@@ -19,14 +19,14 @@
               </tr>
             </thead>
             <tbody>
-              {% for album in albums %}
+              {% for album in list_album %}
               <tr>
                 <td style="max-width: 200px; word-wrap: break-word;text-align: center;">
-                    {{ album.judul }}
+                    {{ album.judul_album }}
                 </td>
-                <td style="text-align: center;">{{ album.nama }}</td>
-                <td style="text-align: center;">{{ album.jumlah_lagu }}</td>
-                <td style="text-align: center;">{{ album.total_durasi }} menit</td>
+                <td style="text-align: center;">{{ album.nama_label }}</td>
+                <td style="text-align: center;">{{ album.jumlah_lagu_album }}</td>
+                <td style="text-align: center;">{{ album.total_durasi_album }} menit</td>
                 <td style="text-align: center;">
                   <div class="button-group" style="padding: 10px;">
                     <a href="{{ album.id }}/songs" class="btn btn-info btn-sm" style="width: 100%;">Lihat Daftar Lagu</a>

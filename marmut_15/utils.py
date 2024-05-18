@@ -2,6 +2,7 @@ from marmut_15.settings import env
 from datetime import datetime
 import jwt
 from jwt.exceptions import InvalidTokenError
+from django.http import HttpRequest
 
 
 def decode_session_token(session_token: str):
@@ -19,5 +20,5 @@ def decode_session_token(session_token: str):
 def extract_session_token(request):
     if 'session_token' not in request.COOKIES:
         raise 'Session token is missing'
-    
+
     return request.COOKIES['session_token']

@@ -3,16 +3,21 @@
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-6">
-    <div class="card-header">
-      <h2 class="text-center">Create Album</h2>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <h1 class="m-0 text-center">ATTN: {{ error }}</h1>
     </div>
+    {% endif %}
     <div class="card">
+      <div class="card-header">
+        <h2 class="text-center">Create Album</h2>
+      </div>
       <div class="card-body">
-        <form>
+        <form method="POST" action="">
           {% csrf_token %}
           <div class="mb-3">
-            <label for="judul" class="form-label">Judul</label>
-            <input type="text" class="form-control" id="judul" name="judul" />
+            <label for="album_title" class="form-label">Judul Album</label>
+            <input type="text" class="form-control" id="album_title" name="album_title" />
           </div>
           <div class="mb-3">
             <label for="label" class="form-label">Label</label>
@@ -23,8 +28,55 @@
               {% endfor %}
             </select>
           </div>
+          <div class="mb-3">
+            <h2 class="text-center m-0">Lagu Pertama</h2>
+          </div>
+          <div class="mb-3">
+            <label for="song_title" class="form-label">Judul Lagu</label>
+            <input type="text" class="form-control" id="song_title" name="song_title" />
+          </div>
+          <div class="mb-3">
+            <label for="artist" class="form-label">Artist</label>
+            {% if artist %}
+            <input type="text" class="form-control" id="artist" name="artist" value="{{ artist.nama }}" disabled />
+            {% else %}
+            <select class="form-select" id="artist" name="artist">
+              <option selected disabled>Artist</option>
+              {% for artist in artists %}
+              <option value="{{ artist.id }}">{{ artist.nama }}</option>
+              {% endfor %}
+            </select>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="songwriter" class="form-label">Songwriter</label>
+            {% if songwriter %}
+            <input type="text" class="form-control" id="songwriter" name="songwriter" value="{{ songwriter.nama }}" disabled />
+            {% else %}
+            <select class="form-select" id="songwriter" name="songwriter">
+              <option selected disabled>Songwriter</option>
+              {% for songwriter in songwriters %}
+              <option value="{{ songwriter.id }}">{{ songwriter.nama }}</option>
+              {% endfor %}
+            </select>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="genre" class="form-label">Genre</label>
+            <select multiple id="genre" name="genre" class="form-select">
+              {% for genre in genres %}
+              <option value="{{ genre.genre }}">
+                {{ genre.genre }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="duration" class="form-label">Durasi</label>
+            <input type="number" class="form-control" id="duration" name="duration" />
+          </div>
           <div class="text-center">
-            <a href="/album" class="btn btn-primary w-50">Submit</a>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
           </div>
         </form>
       </div>
