@@ -10,13 +10,14 @@ def decode_session_token(session_token: str):
         decoded_token = jwt.decode(session_token, env('JWT_KEY'), algorithms=['HS256'])
     except InvalidTokenError as err:
         raise 'Session token is invalid' from err
-    
+
     if decoded_token['expiresAt'] < datetime.now().timestamp():
         raise 'Session token has expired'
 
     return decoded_token
 
-def extract_session_token(request: HttpRequest):
+
+def extract_session_token(request):
     if 'session_token' not in request.COOKIES:
         raise 'Session token is missing'
 
