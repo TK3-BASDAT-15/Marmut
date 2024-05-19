@@ -1,82 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
-<title>Podcast Detail</title>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+    {% block meta %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock meta %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    </head>
+    
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; margin-bottom: 20px;">PODCAST DETAIL</h1>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold;">Judul:</p>
+        <p>{{ podcast.judul }}</p>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold;">Genre(s):</p>
+        <p>
+            {% for genre in podcast.genre %}
+                {{ genre }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+    </div>
 
-<div class="container my-5">
-  <div class="text-center mb-4">
-    <h1>PODCAST DETAIL</h1>
-  </div>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold;">Podcaster:</p>
+        <p>{{ podcast.podcaster }}</p>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold;">Total Durasi:</p>
+        <p>{{ podcast.total_durasi }}</p>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold;">Tanggal Rilis:</p>
+        <p>{{ podcast.tanggal_rilis|date:"d F Y" }}</p>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold;">Tahun:</p>
+        <p>{{ podcast.tahun }}</p>
+    </div>
+    <form action="{% url 'podcast:list_podcasts' %}">
+        <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Kembali</button>
+    </form>
 
-  <!-- Podcast Detail Table -->
-  <table class="table table-bordered mb-4">
-    <tbody>
-      <tr>
-        <th scope="row">Judul</th>
-        <td>Podcast1</td>
-      </tr>
-      <tr>
-        <th scope="row">Genre(s)</th>
-        <td>Genre1, Genre2</td>
-      </tr>
-      <tr>
-        <th scope="row">Podcaster</th>
-        <td>Artist1</td>
-      </tr>
-      <tr>
-        <th scope="row">Total Durasi</th>
-        <td>8 jam 20 menit</td>
-      </tr>
-      <tr>
-        <th scope="row">Tanggal Rilis</th>
-        <td>18/03/24</td>
-      </tr>
-      <tr>
-        <th scope="row">Tahun</th>
-        <td>2024</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
-    <button class="btn btn-primary" type="button" onclick="history.back()">Kembali</button>
-  </div>
-
-  <!-- Episode List Table -->
-  <div>
-    <h2>DAFTAR EPISODE</h2>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th scope="col">Judul Episode</th>
-          <th scope="col">Deskripsi</th>
-          <th scope="col">Durasi</th>
-          <th scope="col">Tanggal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>SubJudul1</td>
-          <td>Lorem Ipsum ....</td>
-          <td>59 menit</td>
-          <td>18/03/2024</td>
-        </tr>
-        <tr>
-          <td>SubJudul2</td>
-          <td>Lorem Ipsum ....</td>
-          <td>1 jam 2 menit</td>
-          <td>25/03/2024</td>
-        </tr>
-      </tbody>
+    <h2 style="text-align: center; margin-top: 40px; margin-bottom: 20px;">DAFTAR EPISODE</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Judul Episode</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Deskripsi</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Durasi</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for episode in episodes %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.title }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.description }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.duration }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </div>
 </div>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock content %}

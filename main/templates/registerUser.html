@@ -2,6 +2,11 @@
 
 {% block content %}
 <div class="container mt-5">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <h1 class="m-0 text-center">ATTN: {{ error }}</h1>
+    </div>
+    {% endif %}
     <div class="text-center">
         <h2 class="font-weight-bold">Register</h2>
     </div>
@@ -33,28 +38,32 @@
                     <input type="text" class="form-control" id="birth_place" name="birth_place" placeholder="Enter place of birth">
                 </div>
                 <div class="form-group">
+                    <label for="birth_date">Date of Birth</label>
+                    <input type="date" class="form-control" id="birth_date" name="birth_date" placeholder="Enter date of birth">
+                </div>
+                <div class="form-group">
                     <label for="city">City of Origin</label>
                     <input type="text" class="form-control" id="city" name="city" placeholder="Enter city of origin">
                 </div>
                 <div class="form-group">
                     <label for="role">Role</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="podcaster" id="podcaster" name="role[]">
+                        <input class="form-check-input" type="checkbox" value="podcaster" id="podcaster" name="podcaster">
                         <label class="form-check-label" for="podcaster">Podcaster</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="artist" id="artist" name="role[]">
+                        <input class="form-check-input" type="checkbox" value="artist" id="artist" name="artist">
                         <label class="form-check-label" for="artist">Artist</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="songwriter" id="songwriter" name="role[]">
+                        <input class="form-check-input" type="checkbox" value="songwriter" id="songwriter" name="songwriter">
                         <label class="form-check-label" for="songwriter">Songwriter</label>
                     </div>
                 </div>
-                <!--
+                
                 <button type="submit" class="btn btn-primary btn-block">Register</button>
-                -->
-                <a href="{% url 'main:login' %}" class="btn btn-primary btn-block">Login</a>
+               
+                <!-- <a href="{% url 'main:login' %}" class="btn btn-primary btn-block">Login</a> -->
             </form>
         </div>
     </div>

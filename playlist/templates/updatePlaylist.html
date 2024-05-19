@@ -9,8 +9,8 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <form >
-              {% csrf_token %}
+            {% csrf_token %}
+            <form  method = 'POST'>
               <div class="mb-3">
                 <label for="judul" class="form-label">Judul</label>
                 <input type="text" class="form-control" id="judul" name="judul">
@@ -20,7 +20,7 @@
                 <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
               </div>
               <div class="text-center">
-                <a href="{% url 'playlist:user_playlist' %}"  class="btn btn-primary w-50">Submit</a>
+                <button type="submit" class="btn btn-primary w-50">Submit</button>
               </div>
             </form>
           </div>

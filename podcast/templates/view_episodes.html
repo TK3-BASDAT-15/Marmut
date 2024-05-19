@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+<head>
+    <meta charset="UTF-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+    {% block meta %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock meta %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; margin-bottom: 20px;">Daftar Episodes Pada Podcast {{ podcast.judul }} </h1>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Judul Episode</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Deskripsi</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Durasi</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Tanggal</th>
+                <th style="border: 1px solid #ddd; padding: 10px; background-color: #f2f2f2;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for episode in episodes %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.title }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.description }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.duration }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">{{ episode.date }}</td>
+                <td style="border: 1px solid #ddd; padding: 10px;">
+                    <form method="post" action="{% url 'podcast:delete_episode' episode_id=episode.episode_id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color: #dc3545; color: #fff; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer;">Hapus</button>
+                    </form>                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
