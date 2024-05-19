@@ -35,7 +35,7 @@
             <td style="text-align: center">
               <div class="button-group" style="padding: 10px">
                 <a
-                  href="/song/{{ song.id_konten }}"
+                  href="{{ song.id_konten }}"
                   class="btn btn-info btn-sm"
                   style="width: 100%"
                   >Lihat Detail</a
@@ -43,7 +43,7 @@
               </div>
               <div class="button-group" style="padding: 10px">
                 <a
-                  href="{{ album.id }}/delete-song/{{ song.id }}"
+                  href="{{ song.id_konten }}/delete"
                   class="btn btn-danger btn-sm"
                   style="width: 100%"
                   >Hapus</a

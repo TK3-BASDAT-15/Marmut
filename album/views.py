@@ -298,10 +298,13 @@ class AlbumDetailView(View):
 
     def __get_delete_album(self, request: HttpRequest, id_album: str):
         with connection.cursor() as cursor:
-            query = 'DELETE FROM album WHERE id = %s'
+            query = 'DELETE FROM genre USING song JOIN album ON song.id_album = album.id WHERE genre.id_konten = song.id_konten AND album.id = %s'
             cursor.execute(query, (id_album,))
 
-            query = 'DELETE FROM song WHERE id_album = %s'
+            query = 'DELETE FROM konten USING song WHERE konten.id = song.id_konten AND song.id_album = %s'
+            cursor.execute(query, (id_album,))
+
+            query = 'DELETE FROM album WHERE id = %s'
             cursor.execute(query, (id_album,))
 
         return redirect(reverse('album:list'))
@@ -363,4 +366,4 @@ class AlbumDetailView(View):
             for genre in cleaned_data['genre']:
                 cursor.execute(query, (id_konten, genre))
 
-        return redirect(reverse('album:songs', args=(id_album,)))
+        return redirect(reverse('album:details', args=(id_album,)))
