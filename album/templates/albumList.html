@@ -29,13 +29,15 @@
                 <td style="text-align: center;">{{ album.total_durasi_album }} menit</td>
                 <td style="text-align: center;">
                   <div class="button-group" style="padding: 10px;">
-                    <a href="{{ album.id }}/songs" class="btn btn-info btn-sm" style="width: 100%;">Lihat Daftar Lagu</a>
+                    <a href="{% url 'album:details' album.id_album %}" class="btn btn-info btn-sm" style="width: 100%;">Lihat Daftar Lagu</a>
                   </div>
                   <div class="button-group" style="padding: 10px;">
-                    <a href="{{ album.id }}/add-song" class= "btn btn-success btn-sm" style="width: 100%;">Tambah Lagu</a>
+                    {% if not is_label %}
+                    <a href="{% url 'album:add_song' album.id_album %}" class= "btn btn-success btn-sm" style="width: 100%;">Tambah Lagu</a>
+                    {% endif %}
                   </div>
                   <div class="button-group" style="padding: 10px;">
-                    <a href="/album/{{ album.id }}/delete" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
+                    <a href="{% url 'album:delete' album.id_album %}" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
                   </div>
                 </td> 
               </tr>
