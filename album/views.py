@@ -75,7 +75,7 @@ class AlbumView(View):
 
     def __get_add_album(self, request: HttpRequest, decoded_token: dict):
         if decoded_token['isLabel']:
-            return render(request, '<h1>LABEL JGN MSK</h1>')
+            return render(request, 'labelJgnMsk.html')
 
         context = {}
 
@@ -136,7 +136,7 @@ class AlbumView(View):
 
     def __post_add_album(self, request: HttpRequest, decoded_token: dict):
         if decoded_token['isLabel']:
-            return render(request, '<h1>LABEL JGN MSK</h1>')
+            return render(request, 'labelJgnMsk.html')
 
         context = {}
         
@@ -255,7 +255,7 @@ class AlbumDetailView(View):
 
     def __get_add_song(self, request: HttpRequest, id_album: str, decoded_token: dict):
         if decoded_token['isLabel']:
-            return render(request, '<h1>LABEL JGN MSK</h1>')
+            return render(request, 'labelJgnMsk.html')
 
         context = {}
 
@@ -330,7 +330,7 @@ class AlbumDetailView(View):
 
     def __post_add_song(self, request: HttpRequest, id_album: str, decoded_token: dict):
         if decoded_token['isLabel']:
-            return render(request, '<h1>LABEL JGN MSK</h1>')
+            return render(request, 'labelJgnMsk.html')
 
         context = {}
 
