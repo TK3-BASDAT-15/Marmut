@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'basePlaylist.html' %}
 
 {% block content %}
   <div class="container mt-5">
@@ -35,9 +35,11 @@
                   <div class="button-group" style="padding: 10px;">
                     <a href="{% url 'playlist:user_playlist_edit' playlist.id_user_playlist %}" class= "btn btn-warning btn-sm" style="width: 100%;">Ubah</a>
                   </div>
+                  {% if email == playlist.email_pembuat %}
                   <div class="button-group" style="padding: 10px;">
                     <a href="{% url 'playlist:user_playlist_delete' playlist.id_user_playlist %}" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
                   </div>
+                  {% endif %}
                 </td> 
               </tr>
               {%endfor%}
@@ -46,8 +48,11 @@
           {%else%}
           <p class="text-center">Anda belum memiliki playlist</p>
           {%endif%}
+        
+          {% if email == playlist.email_pembuat %}
         </div>
         <a href="{% url 'playlist:add_playlist' %}" class="btn btn-primary w-100">Tambah Playlist</a>
+        {% endif %}
     </div>
     </div>
   </div>
