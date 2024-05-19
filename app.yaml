@@ -1,0 +1,43 @@
+#
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# [START django_app]
+# [START gaestd_py_django_app_yaml]
+runtime: python39
+
+env_variables:
+  # # This setting is used in settings.py to configure your ALLOWED_HOSTS
+  # APPENGINE_URL: marmut-kelompok-15.uc.r.appspot.com
+  PG_NAME: "kelompok-15"
+  PG_USER: "kelompok-15"
+  PG_PASSWORD: "iY87FAqeUtLN"
+  PG_HOST: "ep-bold-dawn-a2xxvpwo.eu-central-1.pg.koyeb.app"
+  PG_PORT: 5432
+  JWT_KEY: "a466d1bf421be5ab187eb815b4573ddb85f375f365f233459ba322a79746bdfa"
+
+handlers:
+# This configures Google App Engine to serve the files in the app's static
+# directory.
+- url: /static
+  static_dir: staticfiles/
+
+# This handler routes all requests not caught above to your main app. It is
+# required when static routes are defined, but can be omitted (along with
+# the entire handlers section) when there are no static files defined.
+- url: /.*
+  script: auto
+# [END gaestd_py_django_app_yaml]
+# [END django_app]

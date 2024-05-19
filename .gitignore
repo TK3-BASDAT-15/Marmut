@@ -136,4 +136,6 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 
+env/
 venv/
+myenv/
