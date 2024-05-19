@@ -86,7 +86,7 @@ def user_playlist_detail(request, id_user_playlist):
 
         # Ambil lagu yang terkait dengan playlist menggunakan query langsung
         cursor.execute("""
-            SELECT k.judul, a.nama as artist, k.durasi
+            SELECT k.judul, a.nama as artist, k.durasi, s.id_konten
             FROM playlist_song ps
             JOIN song s ON ps.id_song = s.id_konten
             JOIN konten k ON s.id_konten = k.id
@@ -102,8 +102,11 @@ def user_playlist_detail(request, id_user_playlist):
                 'judul_lagu': song_row[0],
                 'artis': song_row[1],
                 'durasi': song_row[2],
+                'id_song': str(song_row[3])
             }
             songs.append(song_dict)
+
+        print(songs)
 
     return render(request, 'userPlaylistDetail.html', {'playlist': playlist, 'songs': songs})
 
@@ -190,7 +193,7 @@ def user_play_song(request):
     print(email)
     return render(request,'songDetail.html')
 
-def user_delete_song(request):
+def user_delete_song(request, id_song):
     try :
         session_token = extract_session_token(request)
         decoded_token = decode_session_token(session_token)
@@ -199,10 +202,15 @@ def user_delete_song(request):
         
     email = decoded_token['email']
     print(email)
-    return render(request, 'userPlaylistDetail.html')
 
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM playlist_song WHERE id_song = %s", [id_song])
+    return redirect('playlist:user_playlist_detail')
 
-def user_add_song(request):
+    
+
+@csrf_exempt
+def user_add_song(request, id_playlist):
     try :
         session_token = extract_session_token(request)
         decoded_token = decode_session_token(session_token)
@@ -211,6 +219,23 @@ def user_add_song(request):
         
     email = decoded_token['email']
     print(email)
+
+    if request.method == 'POST':
+        song_id = request.POST.get('song_id')
+        
+
+        with connection.cursor() as cursor:
+            cursor.execute( "INSERT INTO playlist_song (id_playlist, id_song) VALUES (%s)", [id_playlist,song_id ])
+
+        context = {
+        'data_playlist': [{
+            'id_playlist': row[0],
+            'id_song': row[1],
+            'judul': row[2],
+            'total_durasi': row[3],
+            } for row in entries],
+        }
+        return redirect('playlist:user_playlist_detail', context)
     return render(request, 'addSong.html')
 
 
@@ -227,7 +252,9 @@ def play_user_playlist(request):
     return render(request, 'userPlaylistDetail.html')
 
 #R play song
-def user_song_detail(request):
+def user_song_detail(request, id_song):
+
+    print(id_song)
     try :
         session_token = extract_session_token(request)
         decoded_token = decode_session_token(session_token)
