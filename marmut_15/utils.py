@@ -73,6 +73,9 @@ def login_required(func):
             elif is_label:
                 query = 'SELECT label.id FROM label \
                         WHERE label.email = %s'
+            else:
+                query = 'SELECT akun.email FROM akun \
+                        WHERE akun.email = %s'
                 
             cursor.execute(query, (email,))
 
