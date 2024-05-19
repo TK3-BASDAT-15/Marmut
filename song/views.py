@@ -1,13 +1,9 @@
 from django.db import connection
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-import datetime
-import json
-import uuid
 from marmut_15.utils import login_required
 
 # Create your views here.

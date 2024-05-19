@@ -1,7 +1,9 @@
-from django.urls import path, re_path
+from django.urls import path
 
 from .views import *
 
+app_name = 'royalti'
+
 urlpatterns = [
-    path('akun/<str:email_akun>/royalti/', RoyaltiView.as_view())
+    path('', RoyaltiView.as_view(), name='royalti')
 ]

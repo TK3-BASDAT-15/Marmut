@@ -206,6 +206,10 @@ class AlbumView(View):
             for genre in cleaned_data['genre']:
                 cursor.execute(query, (id_konten, genre))
 
+            query = 'INSERT INTO royalti (id_pemilik_hak_cipta, id_song, jumlah) \
+                    VALUES (%s, %s, %s)'
+            cursor.execute(query, (id_pemilik_hak_cipta, id_konten, 0))
+
         return redirect(reverse('album:list'))
 
 
@@ -387,4 +391,8 @@ class AlbumDetailView(View):
             for genre in cleaned_data['genre']:
                 cursor.execute(query, (id_konten, genre))
 
-        return redirect(reverse('album:details', args=(id_album,)))
+            query = 'INSERT INTO royalti (id_pemilik_hak_cipta, id_song, jumlah) \
+                    VALUES (%s, %s, %s)'
+            cursor.execute(query, (id_pemilik_hak_cipta, id_konten, 0))
+
+        return redirect(reverse('album:list'))

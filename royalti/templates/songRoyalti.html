@@ -18,27 +18,15 @@
             </tr>
         </thead>
         <tbody>
+            {% for row in royalti_list %}
             <tr>
-                <td>Lagu1</td>
-                <td>Album1</td>
-                <td>3</td>
-                <td>0</td>
-                <td>Rp 450000</td>
+                <td>{{ row.judul_konten }}</td>
+                <td>{{ row.judul_album }}</td>
+                <td>{{ row.total_play_song }}</td>
+                <td>{{ row.total_download_song }}</td>
+                <td>{{ row.jumlah_royalti }}</td>
             </tr>
-            <tr>
-                <td>Lagu2</td>
-                <td>Album2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>Rp 520000</td>
-            </tr>
-            <tr>
-                <td>...</td>
-                <td></td>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

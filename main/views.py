@@ -157,6 +157,14 @@ class RegisterView(View):
                 context['error'] = 'User/label already exists'
                 return render(request, 'registerLabel.html', context=context,
                               status=HttpResponseBadRequest.status_code)
+            
+            id_pemilik_hak_cipta = uuid.uuid4()
+            query = 'INSERT INTO pemilik_hak_cipta (id, rate_royalti) \
+                    VALUES (%s, %s)'
+            cursor.execute(query, (id_pemilik_hak_cipta, 0))
+
+            query = 'UPDATE label SET id_pemilik_hak_cipta = %s WHERE email = %s'
+            cursor.execute(query, (id_pemilik_hak_cipta, cleaned_data['email']))
 
         return redirect(reverse('main:login'))
 
