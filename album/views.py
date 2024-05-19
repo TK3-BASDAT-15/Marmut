@@ -39,7 +39,7 @@ class AlbumView(View):
 
 
     def __get_album_list_user(self, request: HttpRequest, decoded_token: dict):
-        context = {}
+        context = {'is_label': False}
 
         with connection.cursor() as cursor:
             if decoded_token['isArtist']:
@@ -61,10 +61,22 @@ class AlbumView(View):
 
 
     def __get_album_list_label(self, request: HttpRequest, decoded_token: dict):
-        pass
-        
+        context = {'is_label': True}
+
+        with connection.cursor() as cursor:
+            query = 'SELECT album.id, album.judul, label.nama, album.jumlah_lagu, album.total_durasi FROM album JOIN label ON album.id_label = label.id WHERE label.email = %s'
+            cursor.execute(query, (decoded_token['email'],))
+            columns = ['id_album', 'judul_album', 'nama_label', 'jumlah_lagu_album', 'total_durasi_album']
+            list_album = [dict(zip(columns, row)) for row in cursor.fetchall()]
+            context['list_album'] = list_album
+
+        return render(request, 'albumList.html', context=context)
+
 
     def __get_add_album(self, request: HttpRequest, decoded_token: dict):
+        if decoded_token['isLabel']:
+            return render(request, '<h1>LABEL JGN MSK</h1>')
+
         context = {}
 
         with connection.cursor() as cursor:
@@ -123,6 +135,9 @@ class AlbumView(View):
         
 
     def __post_add_album(self, request: HttpRequest, decoded_token: dict):
+        if decoded_token['isLabel']:
+            return render(request, '<h1>LABEL JGN MSK</h1>')
+
         context = {}
         
         with connection.cursor() as cursor:
@@ -239,6 +254,9 @@ class AlbumDetailView(View):
 
 
     def __get_add_song(self, request: HttpRequest, id_album: str, decoded_token: dict):
+        if decoded_token['isLabel']:
+            return render(request, '<h1>LABEL JGN MSK</h1>')
+
         context = {}
 
         with connection.cursor() as cursor:
@@ -311,6 +329,9 @@ class AlbumDetailView(View):
     
 
     def __post_add_song(self, request: HttpRequest, id_album: str, decoded_token: dict):
+        if decoded_token['isLabel']:
+            return render(request, '<h1>LABEL JGN MSK</h1>')
+
         context = {}
 
         with connection.cursor() as cursor:
