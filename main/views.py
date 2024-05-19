@@ -8,29 +8,20 @@ import uuid
 import jwt
 from marmut_15.settings import env
 from datetime import datetime, timedelta
-from marmut_15.utils import decode_session_token, login_required
+from marmut_15.utils import extract_session_token, decode_session_token, login_required
 from django.utils.decorators import method_decorator
 
 
 # Create your views here.
-@method_decorator(login_required, name='get')
 class MainView(View):
-    def get(self, request: HttpRequest, decoded_token: dict):
-        context = {}
+    def get(self, request: HttpRequest):
+        try:
+            session_token = extract_session_token(request)
+            decode_session_token(session_token)
+            return redirect(reverse('main:show_dashboard'))
+        except:
+            return render(request, 'main.html')
 
-        with connection.cursor() as cursor:
-            query = 'SELECT nama FROM akun WHERE email = %s'
-            cursor.execute(query, (decoded_token['email'],))
-            nama = cursor.fetchone()
-
-            if nama is None:
-                query = 'SELECT nama FROM label WHERE email = %s'
-                cursor.execute(query, (decoded_token['email'],))
-                nama = cursor.fetchone()
-
-            context['nama'] = nama[0]
-
-        return render(request, 'main.html', context=context)
 
 
 class RegisterView(View):

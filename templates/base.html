@@ -23,9 +23,9 @@
                     {% block navbar %}
                     
                     {% endblock %}
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Dashboard</a>
-                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link d-inline" href="{% url 'main:show_dashboard' %}">Dashboard</a>
+                    </li>
 
                    
                     <li class="nav-item">
@@ -35,20 +35,13 @@
                         <a class="nav-link d-inline" href="{% url 'playlist:user_playlist' %}">Kelola Playlist</a>
                     </li>
 
-                
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Cek Royalti</a>
-                    </li> -->
-
                     
                     
                     
                     <li class="nav-item">
                         <a class="nav-link d-inline" href="{% url 'podcast:list_podcasts' %}">Kelola Podcast</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Cek Royalti</a>
-                    </li> -->
+                    
 
                     <li class="nav-item">
                         <a class="nav-link d-inline" href="{% url 'album:list' %}">Kelola Album & Songs</a>
@@ -57,13 +50,10 @@
                     <li class="nav-item">
                         <a class="nav-link d-inline" href="{% url 'main:logout' %}">Logout</a>
                     </li>
-                    
-                   
-                    <li class="nav-item">
-                        Welcome,<a class="nav-link d-inline" href="#">{{ nama }}</a>
-                    </li>
 
-                    
+                    <li class="nav-item">
+                        <a class="nav-link d-inline" href="{% url 'royalti:royalti' %}">Cek Royalti</a>
+                    </li>
                     
                 </ul>
             </div>

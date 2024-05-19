@@ -34,7 +34,7 @@ SECRET_KEY = "django-insecure-_*faoph4-mp3oq3*js1$(2q+8vjivi*4okr08+c=tvlyj=+4a4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['analog-button-419804.et.r.appspot.com']
+ALLOWED_HOSTS = ['analog-button-419804.et.r.appspot.com', '127.0.0.1']
 
 
 # Application definition
