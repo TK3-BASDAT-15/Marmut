@@ -13,11 +13,11 @@
             <form  method = 'POST'>
               <div class="mb-3">
                 <label for="judul" class="form-label">Judul</label>
-                <input type="text" class="form-control" id="judul" name="judul">
+                <input type="text" class="form-control" id="judul" name="judul" value="{{playlist.judul}}">
               </div>
               <div class="mb-3">
                 <label for="deskripsi" class="form-label">Deskripsi</label>
-                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
+                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" >{{playlist.deskripsi}}</textarea>
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary w-50">Submit</button>

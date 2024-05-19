@@ -4,23 +4,29 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
+        {% if message != None %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Error! </strong>{{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
         <h2 class="text-center">Tambah Lagu ke Playlist</h2>
         <div class="card">
           <div class="card-body">
-            <form method="POST" action="{% url 'playlist:user_add_song' playlist.id_playlist %}">
-              {% csrf_token %}
+            <form method="post">
               <div class="mb-3">
                 <label for="dropdownLagu" class="form-label">Pilih Lagu</label>
-                <select class="form-select" id="dropdownLagu" name="song_id">
-                  <!-- opsi lagu -->
+                <select class="form-select" id="dropdownLagu" name="dropdownLagu">
+                  <!--opsi lagu  -->
                   <option selected disabled>Pilih lagu...</option>
-                  {% for song in songs %}
-                    <option value="{{ song.id }}">{{ song.title }}</option>
+                  {% for judul, artist, id in songs %}
+                  <option value="{{ id }}">{{ judul }} - {{ artist }}</option>
                   {% endfor %}
                 </select>
               </div>
               <div class="text-center">
-                <button type="submit" class="btn btn-primary w-50">Submit</button>
+                <button class="btn btn-primary w-50 m-3" type="submit">Submit</button>
+                <a href="{% url 'playlist:user_playlist_detail' id_user_playlist %}"  class="btn btn-secondary w-50">Kembali</a>
               </div>
             </form>
           </div>
