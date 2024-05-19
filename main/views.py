@@ -286,15 +286,35 @@ class DashboardView(View):
         context = {}
 
         with connection.cursor() as cursor:
-            query = 'SELECT nama FROM akun WHERE email = %s'
-            cursor.execute(query, (decoded_token['email'],))
-            nama = cursor.fetchone()
-
-            if nama is None:
-                query = 'SELECT nama FROM label WHERE email = %s'
+            if decoded_token['isArtist'] or decoded_token['isSongwriter']:
+                query = 'SELECT nama, kota_asal, gender, tempat_lahir, tanggal_lahir FROM akun \
+                        WHERE email = %s'
                 cursor.execute(query, (decoded_token['email'],))
-                nama = cursor.fetchone()
 
-            context['nama'] = nama[0]
+                columns = ['nama', 'kota_asal', 'gender', 'tempat_lahir', 'tanggal_lahir']
+                akun = dict(zip(columns, cursor.fetchone()))
+
+                akun['email'] = decoded_token['email']
+
+                if decoded_token['isArtist']:
+                    akun['role'] = 'Artist'
+                elif decoded_token['isSongwriter']:
+                    akun['role'] = 'Songwriter'
+                else:
+                    akun['role'] = 'User'
+
+                context['nama'] = akun['nama']
+                context['akun'] = akun
+            elif decoded_token['isLabel']:
+                query = 'SELECT nama, kontak FROM label WHERE email = %s'
+                cursor.execute(query, (decoded_token['email'],))
+
+                columns = ['nama', 'email', 'kontak']
+                label = dict(zip(columns, cursor.fetchone()))
+
+                label['email'] = decoded_token['email']
+
+                context['nama'] = label['nama']
+                context['label'] = label
 
         return render(request, 'dashboard.html', context=context)

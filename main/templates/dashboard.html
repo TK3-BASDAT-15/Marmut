@@ -4,8 +4,37 @@
 <div class="card text-center">
               <div class="card-body text-center">
                   <h5 class="card-title text-center">User Information Dashboard</h5>
-                  <h6 class="card-subtitle mb-2 text-center text-muted">John Doe</h6>
-                  <p class="card-text text-center">john.doe@example.com</p>
+                  {% if akun %}
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Nama</h6>
+                  <p class="card-text text-center">{{ akun.nama }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Email</h6>
+                  <p class="card-text text-center">{{ akun.email }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Status Langganan</h6>
+                  <p class="card-text text-center">Non-Premium</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Kota Asal</h6>
+                  <p class="card-text text-center">{{ akun.kota_asal }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Gender</h6>
+                  {% if gender == 0 %}
+                  <p class="card-text text-center">Male</p>
+                  {% else %}
+                  <p class="card-text text-center">Female</p>
+                  {% endif %}
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Tempat Lahir</h6>
+                  <p class="card-text text-center">{{ akun.tempat_lahir }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Tanggal Lahir</h6>
+                  <p class="card-text text-center">{{ akun.tanggal_lahir }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Role</h6>
+                  {% if not akun.role == 'regular' %}
+                  <p class="card-text text-center">{{ akun.role }}</p>
+                  {% endif %}
+                  {% elif label %}
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Nama</h6>
+                  <p class="card-text text-center">{{ label.nama }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Email</h6>
+                  <p class="card-text text-center">{{ label.email }}</p>
+                  <h6 class="card-subtitle mb-2 text-center text-muted">Kontak</h6>
+                  <p class="card-text text-center">{{ label.kontak }}</p>
+                  {% endif %}
           </div>
       </div>
   </div>
