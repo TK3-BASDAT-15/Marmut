@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+     "whitenoise.runserver_nostatic",
+
     "podcast",
     "main",
     "playlist",
@@ -63,6 +65,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+ "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "marmut_15.urls"
@@ -142,6 +146,9 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+#or
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -150,4 +157,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
