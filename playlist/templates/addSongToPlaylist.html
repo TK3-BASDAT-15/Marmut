@@ -4,29 +4,38 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
+        {% if message_failed != None %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Error! </strong>{{message_failed}}
+        </div>
+        {% endif %}
+        {% if message_success != None %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Berhasil! </strong>{{message_success}}
+        </div>
+        {% endif %}
         <div class="card">
           <div class="card-body">
-            <form>
+            <form method="post">
               <div class="mb-3">
-                <label for="judul" class="form-label">Judul:</label>
-                <input type="text" class="form-control" id="judul" name="judul">
+                <label for="judul" class="form-label">Judul: {{judul_lagu}}</label>
               </div>
               <div class="mb-3">
-                <label for="artist" class="form-label">Artist:</label>
-                <input type="text" class="form-control" id="artist" name="artist">
+                <label for="artist" class="form-label">Artist: {{artis}}</label>
               </div>
               <div class="mb-3">
                 <label for="dropdownPlaylist" class="form-label">Playlist:</label>
                 <select class="form-select" id="dropdownPlaylist" name="dropdownPlaylist">
                   <!-- opsi playlist-->
                   <option selected disabled>Pilih playlist...</option>
-                  <option value="playlist1">Playlist 1</option>
-                  <option value="playlist2">Playlist 2</option>
+                  {% for judul, idplaylist in playlist %}
+                  <option value="{{ idplaylist }}">{{ judul }}</option>
+                  {% endfor %}
                 </select>
               </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary">Tambah</button>
-                <a href="#" class="btn btn-secondary">Kembali</a>
+                <a href="{% url 'playlist:user_playlist' %}" class="btn btn-secondary">Kembali</a>
               </div>
             </form>
           </div>

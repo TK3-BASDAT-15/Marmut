@@ -4,6 +4,11 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-8">
+        {% if message != None %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Playlist! </strong>{{message}}
+        </div>
+        {% endif %}
         <h2 class="text-center">User Playlist Detail</h2>
         <div class="card">
           <div class="card-body">
@@ -15,7 +20,7 @@
                   </tr>
                   <tr>
                       <td>Pembuat</td>
-                      <td class="text-start">: {{ playlist.email_pembuat }}</td>
+                      <td class="text-start">: {{ playlist.nama_pembuat }}</td>
                   </tr>
                   <tr>
                       <td>Jumlah Lagu</td>
@@ -36,7 +41,9 @@
               </tbody>
           </table>                    
             <div class="text-center">
-              <button class="btn btn-primary">Shuffle Play</button>
+              <form method="post">
+                <button class="btn btn-primary" type="submit">Shuffle Play</button>
+              </form>
               <a href="{% url 'playlist:user_playlist' %}"  class="btn btn-secondary">Kembali</a>
             </div>
             <!-- Form Daftar Lagu -->
@@ -65,15 +72,15 @@
                                 <td style="max-width: 100px; text-align: center; word-wrap: break-word;">
 
                                 <div class="button-group" style="padding: 10px;">
-                                  <a href="{% url 'playlist:user_song_detail' song.id_song %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
+                                  <a href="{% url 'playlist:user_song_detail' song.id playlist.id_playlist %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
                                 </div>
                                 <div class="button-group" style="padding: 10px;">
                                   <button class="btn btn-success btn-sm" style="width: 70px;">Play</button>
                                 </div>
 
-                                {% if request.user.email == playlist.email %}
+                                {% if email == playlist.email_pembuat %}
                                 <div class="button-group" style="padding: 10px;">
-                                  <a href="{% url 'playlist:user_delete_song' song.id_song %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
+                                  <a href="{% url 'playlist:user_delete_song' song.id playlist.id_playlist id_user_playlist %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
                                 </div>
                                 {% endif %}
                                 </td>
@@ -82,9 +89,9 @@
                             </tbody>
                         </table>
 
-                        {% if request.user.email == playlist.email %}
+                        {% if email == playlist.email_pembuat %}
                         <div class="text-center">
-                          <a href="{% url 'playlist:user_add_song' playlist.id_playlist %}" class="btn btn-primary w-100">Tambah Lagu</a>
+                          <a href="{% url 'playlist:user_add_song' playlist.id_playlist id_user_playlist %}" class="btn btn-primary w-100">Tambah Lagu</a>
                         </div>
                         {% endif %}
                         </div>
