@@ -1,39 +1,30 @@
 from django.db import connection
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from marmut_15.utils import decode_session_token, extract_session_token
+from marmut_15.utils import login_required
 from album.forms import AddAlbumForm
 import uuid
 from datetime import datetime
+from django.utils.decorators import method_decorator
 
 # Create your views here.
+@method_decorator(login_required, name='get')
+@method_decorator(login_required, name='post')
 class AlbumView(View):
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest, decoded_token: dict):
         req_full_path = request.get_full_path()
-        
-        try:
-            session_token = extract_session_token(request)
-            decoded_token = decode_session_token(session_token)
-        except:
-            return redirect(reverse('main:login'))
 
         if req_full_path.endswith('/create/'):
             return self.__get_add_album(request, decoded_token)
         elif req_full_path.endswith('/'):
             return self.__get_album_list(request, decoded_token)
 
-  
-    def post(self, request: HttpRequest):
+
+    def post(self, request: HttpRequest, decoded_token: dict):
         req_full_path = request.get_full_path()
-
-        try:
-            session_token = extract_session_token(request)
-            decoded_token = decode_session_token(session_token)
-        except:
-            return redirect(reverse('main:login'))
-
+        
         if req_full_path.endswith('/create/'):
             return self.__post_add_album(request, decoded_token)
 
@@ -51,9 +42,16 @@ class AlbumView(View):
         context = {}
 
         with connection.cursor() as cursor:
-            query = 'SELECT album.id, album.judul, label.nama, album.jumlah_lagu, album.total_durasi FROM album \
-                    JOIN label ON album.id_label = label.id'
-            cursor.execute(query)
+            if decoded_token['isArtist']:
+                table_name = 'artist'
+            elif decoded_token['isSongwriter']:
+                table_name = 'songwriter'
+
+            query = f'SELECT album.id, album.judul, label.nama, album.jumlah_lagu, album.total_durasi FROM album \
+                    JOIN label ON album.id_label = label.id \
+                    JOIN {table_name} ON label.id_pemilik_hak_cipta = {table_name}.id_pemilik_hak_cipta \
+                    WHERE {table_name}.email_akun = %s'
+            cursor.execute(query, (decoded_token['email'],))
 
             columns = ['id_album', 'judul_album', 'nama_label', 'jumlah_lagu_album', 'total_durasi_album']
             list_album = [dict(zip(columns, row)) for row in cursor.fetchall()]
@@ -126,39 +124,31 @@ class AlbumView(View):
         
 
     def __post_add_album(self, request: HttpRequest, decoded_token: dict):
-        try:
-            session_token = extract_session_token(request)
-            decoded_token = decode_session_token(session_token)
-        except:
-            return redirect(reverse('main:login'))
-        
         context = {}
         
         with connection.cursor() as cursor:
             data = request.POST.copy()
 
             if decoded_token['isArtist']:
-                query = 'SELECT id FROM artist \
+                query = 'SELECT id, id_pemilik_hak_cipta FROM artist \
                         WHERE email_akun = %s'
                 cursor.execute(query, (decoded_token['email'],))
 
-                try:
-                    artist_id = cursor.fetchone()[0]
-                except:
-                    return redirect(reverse('main:login'))
-                
-                data['artist'] = artist_id
+                columns = ['id', 'id_pemilik_hak_cipta']
+                artist = dict(zip(columns, cursor.fetchone()))
+
+                data['artist'] = artist['id']
+                id_pemilik_hak_cipta = artist['id_pemilik_hak_cipta']
             elif decoded_token['isSongwriter']:
-                query = 'SELECT id FROM songwriter \
+                query = 'SELECT id, id_pemilik_hak_cipta FROM songwriter \
                         WHERE email_akun = %s'
                 cursor.execute(query, (decoded_token['email'],))
 
-                try:
-                    songwriter_id = cursor.fetchone()[0]
-                except:
-                    return redirect(reverse('main:login'))
-                
-                data['songwriter'] = songwriter_id
+                columns = ['id', 'id_pemilik_hak_cipta']
+                songwriter = dict(zip(columns, cursor.fetchone()))
+
+                data['songwriter'] = songwriter['id']
+                id_pemilik_hak_cipta = songwriter['id_pemilik_hak_cipta']
 
             form = AddAlbumForm(data)
 
@@ -167,6 +157,9 @@ class AlbumView(View):
                 return render(request, 'addAlbum.html', context=context)
             
             cleaned_data = form.cleaned_data
+
+            query = 'UPDATE label SET id_pemilik_hak_cipta = %s WHERE id = %s'
+            cursor.execute(query, (id_pemilik_hak_cipta, cleaned_data['label']))
 
             id_album = uuid.uuid4()
             query = 'INSERT INTO album (id, judul, id_label) \
@@ -192,7 +185,7 @@ class AlbumView(View):
         return redirect(reverse('album:list'))
 
 
-    
+@method_decorator(login_required, name='get')
 class AlbumDetailView(View):
     def get(self, request: HttpRequest, id_album):
         req_full_path = request.get_full_path()
@@ -226,7 +219,7 @@ class AlbumDetailView(View):
         context = {'songs': songs, 'album': album}
 
         return render(request, 'albumSongs.html', context=context)
-    
+
 
     def __get_add_song(self, request: HttpRequest, id_album):
         with connection.cursor() as cursor:

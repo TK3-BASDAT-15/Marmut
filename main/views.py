@@ -8,7 +8,8 @@ import uuid
 import jwt
 from marmut_15.settings import env
 from datetime import datetime, timedelta
-from marmut_15.utils import decode_session_token
+from marmut_15.utils import decode_session_token, login_required
+from django.utils.decorators import method_decorator
 
 
 # Create your views here.
@@ -107,11 +108,19 @@ class RegisterView(View):
                 query = 'INSERT INTO podcaster (email) VALUES (%s)'
                 cursor.execute(query, (cleaned_data['email'],))
             if cleaned_data['artist']:
+                id_pemilik_hak_cipta = uuid.uuid4()
+                query = 'INSERT INTO pemilik_hak_cipta (id, rate_royalti) \
+                        VALUES (%s, %s)'
+                cursor.execute(query, (id_pemilik_hak_cipta, 0))
                 query = 'INSERT INTO artist (id, email_akun, id_pemilik_hak_cipta) VALUES (%s, %s, %s)'
-                cursor.execute(query, (uuid.uuid4(), cleaned_data['email'], None))
+                cursor.execute(query, (uuid.uuid4(), cleaned_data['email'], id_pemilik_hak_cipta))
             if cleaned_data['songwriter']:
+                id_pemilik_hak_cipta = uuid.uuid4()
+                query = 'INSERT INTO pemilik_hak_cipta (id, rate_royalti) \
+                        VALUES (%s, %s)'
+                cursor.execute(query, (id_pemilik_hak_cipta, 0))
                 query = 'INSERT INTO songwriter (id, email_akun, id_pemilik_hak_cipta) VALUES (%s, %s, %s)'
-                cursor.execute(query, (uuid.uuid4(), cleaned_data['email'], None))
+                cursor.execute(query, (uuid.uuid4(), cleaned_data['email'], id_pemilik_hak_cipta))
 
         return redirect(reverse('main:login'))
         
@@ -248,18 +257,9 @@ class LogoutView(View):
         return response
 
 
+@method_decorator(login_required, name='get')
 class DashboardView(View):
-    def get(self, request: HttpRequest):
-        if 'session_token' not in request.COOKIES:
-            return redirect(reverse('main:login'))
-
-        session_token = request.COOKIES['session_token']
-
-        try:
-            decoded_token = decode_session_token(session_token)
-        except:
-            return redirect(reverse('main:login'))
-        
+    def get(self, request: HttpRequest, decoded_token: dict):
         context = {}
 
         with connection.cursor() as cursor:
