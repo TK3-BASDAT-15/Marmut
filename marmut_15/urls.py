@@ -23,6 +23,7 @@ from django.contrib import messages
 
 
 urlpatterns = [
+    path('', lambda req: redirect('/main/')),
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('', include('royalti.urls')),
