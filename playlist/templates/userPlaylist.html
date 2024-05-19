@@ -9,6 +9,7 @@
         </div>
         <div class="table-responsive">
           <!-- Tabel Playlist -->
+          {%if data_playlist%}
           <table class="table">
             <thead>
               <tr>
@@ -20,46 +21,31 @@
             </thead>
             <tbody>
               <!-- Contoh isi tabel -->
+              {%for playlist in data_playlist%}
               <tr>
                 <td style="max-width: 200px; word-wrap: break-word;text-align: center;">
-                  Playlist 1
+                  {{playlist.judul}}
                 </td>
-                <td style="text-align: center;">10</td>
-                <td style="text-align: center;">1:30:00</td>
+                <td style="text-align: center;">{{playlist.jumlah_lagu}}</td>
+                <td style="text-align: center;">{{playlist.total_durasi}}</td>
                 <td style="text-align: center;">
                   <div class="button-group" style="padding: 10px;">
-                    <a href="{% url 'playlist:user_playlist_detail' %}" class="btn btn-info btn-sm" style="width: 100%;">Detail</a>
+                    <a href="{% url 'playlist:user_playlist_detail' playlist.id_user_playlist %}" class="btn btn-info btn-sm" style="width: 100%;">Detail</a>
                   </div>
                   <div class="button-group" style="padding: 10px;">
-                    <a href="{% url 'playlist:user_playlist_edit' %}" class= "btn btn-warning btn-sm" style="width: 100%;">Ubah</a>
+                    <a href="{% url 'playlist:user_playlist_edit' playlist.id_user_playlist %}" class= "btn btn-warning btn-sm" style="width: 100%;">Ubah</a>
                   </div>
                   <div class="button-group" style="padding: 10px;">
-                    <a href="{% url 'playlist:user_playlist_delete' %}" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
+                    <a href="{% url 'playlist:user_playlist_delete' playlist.id_user_playlist %}" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
                   </div>
                 </td> 
               </tr>
-              <tr>
-                <td style="max-width: 200px; word-wrap: break-word;text-align: center;">
-                  Playlist 1
-                </td>
-                <td style="text-align: center;">10</td>
-                <td style="text-align: center;">1:30:00</td>
-                <td style="text-align: center;">
-                  <div class="button-group" style="padding: 10px;">
-                    <a href="{% url 'playlist:user_playlist_detail' %}" class="btn btn-info btn-sm" style="width: 100%;">Detail</a>
-                  </div>
-                  <div class="button-group" style="padding: 10px;">
-                    <a href="{% url 'playlist:user_playlist_edit' %}" class= "btn btn-warning btn-sm" style="width: 100%;">Ubah</a>
-                  </div>
-                  <div class="button-group" style="padding: 10px;">
-                    <a href="{% url 'playlist:user_playlist_delete' %}" class="btn btn-danger btn-sm" style="width: 100%;">Hapus</a>
-                  </div>
-                </td> 
-              </tr>
+              {%endfor%}
             </tbody>
           </table>
-          <!-- Pesan jika playlist kosong -->
-          <!-- <p class="text-center">Anda belum memiliki playlist</p> -->
+          {%else%}
+          <p class="text-center">Anda belum memiliki playlist</p>
+          {%endif%}
         </div>
         <a href="{% url 'playlist:add_playlist' %}" class="btn btn-primary w-100">Tambah Playlist</a>
     </div>
@@ -67,48 +53,6 @@
   </div>
 
 
-
-  <!-- Modal Ubah Playlist -->
-  <div class="modal fade" id="ubahPlaylistModal" tabindex="-1" aria-labelledby="ubahPlaylistModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="ubahPlaylistModalLabel">Ubah Playlist</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <!-- Form ubah playlist dapat ditambahkan di sini -->
-          <p>Form ubah playlist</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Hapus Playlist -->
-  <div class="modal fade" id="hapusPlaylistModal" tabindex="-1" aria-labelledby="hapusPlaylistModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="hapusPlaylistModalLabel">Hapus Playlist</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <!-- Konten konfirmasi hapus playlist -->
-          <p>Konfirmasi hapus playlist</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger">Hapus</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-sZzKT5LPGm7Ft" ></script>
-{% endblock %}
-
+{% endblock content %}
 
