@@ -53,8 +53,12 @@
             {% if songwriter %}
             <input type="text" class="form-control" id="songwriter" name="songwriter" value="{{ songwriter.nama }}" disabled />
             {% else %}
-            <select class="form-select" id="songwriter" name="songwriter">
-              <option selected disabled>Songwriter</option>
+            <select
+              multiple
+              id="songwriter"
+              name="songwriter"
+              class="form-select"
+            >
               {% for songwriter in songwriters %}
               <option value="{{ songwriter.id }}">{{ songwriter.nama }}</option>
               {% endfor %}

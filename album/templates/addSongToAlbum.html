@@ -12,7 +12,7 @@
           {% csrf_token %}
           <div class="mb-3 d-flex gap-2">
             <h6 class="fw-normal m-0">Album:</h6>
-            <h6 class="fw-normal m-0">Album1</h6>
+            <h6 class="fw-normal m-0">{{ album.judul }}</h6>
           </div>
           <div class="mb-3">
             <label for="judul">Judul</label>
@@ -26,15 +26,22 @@
           </div>
           <div class="mb-3">
             <label for="artist">Artist</label>
-            <select id="artist" name="artist" class="form-select">
-              <option selected disabled>Select an artist</option>
+            {% if artist %}
+            <input type="text" class="form-control" id="artist" name="artist" value="{{ artist.nama }}" disabled />
+            {% else %}
+            <select class="form-select" id="artist" name="artist">
+              <option selected disabled>Artist</option>
               {% for artist in artists %}
               <option value="{{ artist.id }}">{{ artist.nama }}</option>
               {% endfor %}
             </select>
+            {% endif %}
           </div>
           <div class="mb-3">
             <label for="songwriter">Songwriter</label>
+            {% if songwriter %}
+            <input type="text" class="form-control" id="songwriter" name="songwriter" value="{{ songwriter.nama }}" disabled />
+            {% else %}
             <select
               multiple
               id="songwriter"
@@ -45,6 +52,7 @@
               <option value="{{ songwriter.id }}">{{ songwriter.nama }}</option>
               {% endfor %}
             </select>
+            {% endif %}
           </div>
           <div class="mb-3">
             <label for="genre">Genre</label>

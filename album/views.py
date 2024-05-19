@@ -182,6 +182,16 @@ class AlbumView(View):
                     VALUES (%s, %s, %s)'
             cursor.execute(query, (id_konten, cleaned_data['artist'], id_album))
 
+            query = 'INSERT INTO songwriter_write_song (id_songwriter, id_song) \
+                    VALUES (%s, %s)'
+            for id_songwriter in cleaned_data['songwriter']:
+                cursor.execute(query, (id_songwriter, id_konten))
+
+            query = 'INSERT INTO genre (id_konten, genre) \
+                    VALUES (%s, %s)'
+            for genre in cleaned_data['genre']:
+                cursor.execute(query, (id_konten, genre))
+
         return redirect(reverse('album:list'))
 
 
@@ -226,7 +236,8 @@ class AlbumDetailView(View):
             query = 'SELECT judul FROM album WHERE album.id = %s'
             cursor.execute(query, (id_album,))
 
-            album_name = cursor.fetchone()[0]
+            columns = ['judul']
+            album = dict(zip(columns, cursor.fetchone()))
 
             query = 'SELECT id, nama FROM artist JOIN akun ON artist.email_akun = akun.email'
             cursor.execute(query)
@@ -247,7 +258,7 @@ class AlbumDetailView(View):
             genres = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
         context = {
-            'album_name': album_name,
+            'album': album,
             'artists': artists,
             'songwriters': songwriters,
             'genres': genres
