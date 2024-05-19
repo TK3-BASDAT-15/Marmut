@@ -13,9 +13,24 @@ from django.utils.decorators import method_decorator
 
 
 # Create your views here.
+@method_decorator(login_required, name='get')
 class MainView(View):
-    def get(self, request: HttpRequest):
-        return render(request, 'main.html')
+    def get(self, request: HttpRequest, decoded_token: dict):
+        context = {}
+
+        with connection.cursor() as cursor:
+            query = 'SELECT nama FROM akun WHERE email = %s'
+            cursor.execute(query, (decoded_token['email'],))
+            nama = cursor.fetchone()
+
+            if nama is None:
+                query = 'SELECT nama FROM label WHERE email = %s'
+                cursor.execute(query, (decoded_token['email'],))
+                nama = cursor.fetchone()
+
+            context['nama'] = nama[0]
+
+        return render(request, 'main.html', context=context)
 
 
 class RegisterView(View):
