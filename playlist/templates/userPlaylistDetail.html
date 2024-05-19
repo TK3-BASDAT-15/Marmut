@@ -11,27 +11,27 @@
               <tbody>
                   <tr>
                       <td>Judul</td>
-                      <td class="text-start">: Playlist 1</td>
+                      <td class="text-start">: {{ playlist.judul }}</td>
                   </tr>
                   <tr>
                       <td>Pembuat</td>
-                      <td class="text-start">: Pembuat 1</td>
+                      <td class="text-start">: {{ playlist.email_pembuat }}</td>
                   </tr>
                   <tr>
                       <td>Jumlah Lagu</td>
-                      <td class="text-start">: 12</td>
+                      <td class="text-start">: {{ playlist.jumlah_lagu }}</td>
                   </tr>
                   <tr>
                       <td>Total Durasi</td>
-                      <td class="text-start">: 8 jam 20 menit</td>
+                      <td class="text-start">: {{ playlist.total_durasi }}</td>
                   </tr>
                   <tr>
                       <td>Tanggal Dibuat</td>
-                      <td class="text-start">: 18/03/24</td>
+                      <td class="text-start">: {{ playlist.tanggal_dibuat }}</td>
                   </tr>
                   <tr>
                       <td>Deskripsi</td>
-                      <td class="text-start">: Deskripsi Playlist 1</td>
+                      <td class="text-start">: {{ playlist.deskripsi }}</td>
                   </tr>
               </tbody>
           </table>                    
@@ -57,50 +57,36 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- Contoh isi daftar lagu -->
+                            {% for song in songs %}
                             <tr>
-                                <td style="max-width: 200px; word-wrap: break-word;text-align: center;">Lagu 1</td>
-                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">Artis 1 </td>
-                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">4:20</td>
+                                <td style="max-width: 200px; word-wrap: break-word;text-align: center;">{{ song.judul_lagu }}</td>
+                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">{{ song.artis }}</td>
+                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">{{ song.durasi }}</td>
                                 <td style="max-width: 100px; text-align: center; word-wrap: break-word;">
 
                                 <div class="button-group" style="padding: 10px;">
-                                  <a href="{% url 'playlist:user_song_detail' %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
+                                  <a href="{% url 'playlist:user_song_detail' song.id %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
                                 </div>
                                 <div class="button-group" style="padding: 10px;">
                                   <button class="btn btn-success btn-sm" style="width: 70px;">Play</button>
                                 </div>
 
-                                <!-- Nanti tambahin ifelse kalo playlist orang -->
+                                {% if request.user.email == playlist.email_pembuat %}
                                 <div class="button-group" style="padding: 10px;">
-                                  <a href="{% url 'playlist:user_delete_song' %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
+                                  <a href="{% url 'playlist:user_delete_song' song.id %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
                                 </div>
+                                {% endif %}
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="max-width: 200px; word-wrap: break-word;text-align: center;">Lagu 2 </td>
-                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">Artis 2</td>
-                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">3:45</td>
-                                <td style="max-width: 100px; text-align: center; word-wrap: break-word;">
-                                  <div class="button-group" style="padding: 10px;">
-                                    <a href="{% url 'playlist:user_song_detail' %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
-                                  </div>
-                                  <div class="button-group" style="padding: 10px;">
-                                    <button class="btn btn-success btn-sm" style="width: 70px;">Play</button>
-                                  </div>
-                                  <div class="button-group" style="padding: 10px;">
-                                    <a href="{% url 'playlist:user_delete_song' %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
-                                  </div>
-                                  </td>
-                                </td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
 
-                        <!-- Nanti tambahin ifelse kalo playlist orang -->
+                        {% if request.user.email == playlist.email_pembuat %}
                         <div class="text-center">
-                          <a href="{% url 'playlist:user_add_song' %}" class="btn btn-primary w-100">Tambah Lagu</a>
+                          <a href="{% url 'playlist:user_add_song' playlist.id_playlist %}" class="btn btn-primary w-100">Tambah Lagu</a>
                         </div>
+                        {% endif %}
                         </div>
                     </div>
                 </div>
