@@ -65,15 +65,15 @@
                                 <td style="max-width: 100px; text-align: center; word-wrap: break-word;">
 
                                 <div class="button-group" style="padding: 10px;">
-                                  <a href="{% url 'playlist:user_song_detail' song.id %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
+                                  <a href="{% url 'playlist:user_song_detail' song.id_song %}" class="btn btn-info btn-sm" style="width: 70px;">Lihat</a>
                                 </div>
                                 <div class="button-group" style="padding: 10px;">
                                   <button class="btn btn-success btn-sm" style="width: 70px;">Play</button>
                                 </div>
 
-                                {% if request.user.email == playlist.email_pembuat %}
+                                {% if request.user.email == playlist.email %}
                                 <div class="button-group" style="padding: 10px;">
-                                  <a href="{% url 'playlist:user_delete_song' song.id %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
+                                  <a href="{% url 'playlist:user_delete_song' song.id_song %}" class="btn btn-danger btn-sm" style="width: 70px;">Hapus</a>
                                 </div>
                                 {% endif %}
                                 </td>
@@ -82,7 +82,7 @@
                             </tbody>
                         </table>
 
-                        {% if request.user.email == playlist.email_pembuat %}
+                        {% if request.user.email == playlist.email %}
                         <div class="text-center">
                           <a href="{% url 'playlist:user_add_song' playlist.id_playlist %}" class="btn btn-primary w-100">Tambah Lagu</a>
                         </div>

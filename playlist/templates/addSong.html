@@ -7,18 +7,20 @@
         <h2 class="text-center">Tambah Lagu ke Playlist</h2>
         <div class="card">
           <div class="card-body">
-            <form>
+            <form method="POST" action="{% url 'playlist:user_add_song' playlist.id_playlist %}">
+              {% csrf_token %}
               <div class="mb-3">
                 <label for="dropdownLagu" class="form-label">Pilih Lagu</label>
-                <select class="form-select" id="dropdownLagu" name="dropdownLagu">
-                  <!--opsi lagu  -->
+                <select class="form-select" id="dropdownLagu" name="song_id">
+                  <!-- opsi lagu -->
                   <option selected disabled>Pilih lagu...</option>
-                  <option value="lagu1">Lagu 1</option>
-                  <option value="lagu2">Lagu 2</option>
+                  {% for song in songs %}
+                    <option value="{{ song.id }}">{{ song.title }}</option>
+                  {% endfor %}
                 </select>
               </div>
               <div class="text-center">
-                <a href="{% url 'playlist:user_playlist_detail' %}"  class="btn btn-primary w-50">Submit</a>
+                <button type="submit" class="btn btn-primary w-50">Submit</button>
               </div>
             </form>
           </div>
